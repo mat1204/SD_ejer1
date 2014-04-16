@@ -1,1 +1,0 @@
-/usr/bin/c++   -g    CMakeFiles/lanzador.dir/mainLanzador.o CMakeFiles/lanzador.dir/PlataformaVirtual.o CMakeFiles/lanzador.dir/SemRobots.o CMakeFiles/lanzador.dir/ColaMensajes.o CMakeFiles/lanzador.dir/SalidaPorPantalla.o CMakeFiles/lanzador.dir/PlataformaReal.o CMakeFiles/lanzador.dir/ArchConfiguracion.o  -o lanzador -rdynamic 
