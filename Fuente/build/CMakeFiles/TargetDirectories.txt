@@ -1,0 +1,4 @@
+/home/knoppix/Desktop/Proyectos/Ejercicio1/Fuente/build/CMakeFiles/lanzador.dir
+/home/knoppix/Desktop/Proyectos/Ejercicio1/Fuente/build/CMakeFiles/plataforma.dir
+/home/knoppix/Desktop/Proyectos/Ejercicio1/Fuente/build/CMakeFiles/robotArmar.dir
+/home/knoppix/Desktop/Proyectos/Ejercicio1/Fuente/build/CMakeFiles/robotFrec.dir

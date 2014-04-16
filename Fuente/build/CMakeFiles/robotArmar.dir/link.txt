@@ -1,0 +1,1 @@
+/usr/bin/c++   -g    CMakeFiles/robotArmar.dir/mainRobotArmar.o CMakeFiles/robotArmar.dir/PlataformaVirtual.o CMakeFiles/robotArmar.dir/SemRobots.o CMakeFiles/robotArmar.dir/ColaMensajes.o CMakeFiles/robotArmar.dir/SalidaPorPantalla.o CMakeFiles/robotArmar.dir/PlataformaReal.o CMakeFiles/robotArmar.dir/ArchConfiguracion.o  -o robotArmar -rdynamic 

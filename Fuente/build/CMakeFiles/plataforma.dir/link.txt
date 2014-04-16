@@ -1,0 +1,1 @@
+/usr/bin/c++   -g    CMakeFiles/plataforma.dir/mainPlataforma.o CMakeFiles/plataforma.dir/PlataformaVirtual.o CMakeFiles/plataforma.dir/SemRobots.o CMakeFiles/plataforma.dir/ColaMensajes.o CMakeFiles/plataforma.dir/SalidaPorPantalla.o CMakeFiles/plataforma.dir/PlataformaReal.o CMakeFiles/plataforma.dir/ArchConfiguracion.o  -o plataforma -rdynamic 

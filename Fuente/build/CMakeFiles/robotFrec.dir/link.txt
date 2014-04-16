@@ -1,0 +1,1 @@
+/usr/bin/c++   -g    CMakeFiles/robotFrec.dir/mainRobotFrec.o CMakeFiles/robotFrec.dir/PlataformaVirtual.o CMakeFiles/robotFrec.dir/SemRobots.o CMakeFiles/robotFrec.dir/ColaMensajes.o CMakeFiles/robotFrec.dir/SalidaPorPantalla.o CMakeFiles/robotFrec.dir/PlataformaReal.o CMakeFiles/robotFrec.dir/ArchConfiguracion.o  -o robotFrec -rdynamic 
