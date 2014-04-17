@@ -39,7 +39,7 @@ void GestorPedidos::sacarPedido(stPedido& pedido) {
 
 void GestorPedidos::gestionarPedido(const stPedido& pedido) {
 	stMensaje msj;
-	memcpy(&msj.pedido, &pedido, TAM_PEDIDO));
+	memcpy(&msj.pedido, &pedido, TAM_PEDIDO);
 
 	for (int i=0 ; i < _cantConsumidores ; ++i) {
 		msj._mtype = i+1;

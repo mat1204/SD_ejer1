@@ -8,6 +8,14 @@
 #ifndef DEFINICIONES_H_
 #define DEFINICIONES_H_
 
+/************************************************************************************/
+/**
+ *  Macro utilizadda para cambiar entorno de compilacion
+ */
+#define COMP_UBUNTU
+
+/************************************************************************************/
+
 /**
  * Metodos que se pueden consultar en la plataforma
  */
@@ -68,10 +76,17 @@ typedef struct {
 
 #define TAM_MENSAJE_COLA (sizeof(MensajeCola) - sizeof(long int))
 
-#define RUTA_ARCH_COLA	"/home/knoppix/cola"
+#ifndef COMP_UBUNTU
 
-#define RUTA_ARCH_SEMAFOROS "/home/knoppix/semaforos"
+	#define RUTA_ARCH_COLA	"/home/knoppix/cola"
+	#define RUTA_ARCH_SEMAFOROS "/home/knoppix/semaforos"
 
+#else
+
+	#define RUTA_ARCH_COLA	"/home/migue/cola"
+	#define RUTA_ARCH_SEMAFOROS "/home/migue/semaforos"
+
+#endif
 
 #define ID_SEMS_FREC 'a'
 #define ID_SEMS_ARMAR 'b'
@@ -104,7 +119,6 @@ typedef struct {
  * Etiquetas para el archivo de configuracion
  *
  */
-
 
 #define ET_CAPCIDAD_PLAT	"CAPACIDAD_PLATAFORMA"
 #define ET_CANT_ROBOTS		"CANTIDAD_ROBOTS"
