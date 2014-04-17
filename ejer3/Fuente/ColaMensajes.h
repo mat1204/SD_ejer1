@@ -22,7 +22,6 @@ public:
 
 	void enviar(const stMensaje& msj);
 
-	void crear();
 
 	void destruir();
 

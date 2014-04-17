@@ -13,6 +13,10 @@
 
 #include "ColaMensajes.h"
 
+#define TIPO_CONSUMIDOR		0
+#define TIPO_PRODUCTOR 		1
+
+
 class GestorPedidos : public iProcesar, public iSolicitar {
 public:
 	GestorPedidos(int numeroConsumidor = 0);

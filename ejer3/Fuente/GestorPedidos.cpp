@@ -13,7 +13,7 @@
 
 #include <string.h>
 
-GestorPedidos::GestorPedidos(int cantConsumidores) {
+GestorPedidos::GestorPedidos(int numeroConsumidor) {
 	_salida = &SalidaPorPantalla::instancia();
 
 	ArchConfiguracion config;
@@ -23,7 +23,7 @@ GestorPedidos::GestorPedidos(int cantConsumidores) {
 		exit(EXIT_FAILURE);
 	}
 
-	_cantConsumidores = cantConsumidores;
+	_numConsumidor = numeroConsumidor;
 }
 
 GestorPedidos::~GestorPedidos() {
@@ -45,5 +45,4 @@ void GestorPedidos::gestionarPedido(const stPedido& pedido) {
 		msj._mtype = i+1;
 		_cola.enviar(msj);
 	}
-
 }

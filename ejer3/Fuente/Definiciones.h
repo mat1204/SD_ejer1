@@ -31,7 +31,17 @@ typedef struct {
 
 #define TAM_MENSAJE_COLA (sizeof(stMensaje) - sizeof(long int))
 
-#define ET_CANT_CONSUMIDORES	"CANT_CONSUMIDORES"
+/*****************************************************************************/
+
+/**
+ * Etiquetas de archivo para el archivo de configuracion
+ */
+
+#define ET_CANT_CONSUMIDORES	"CANT_CONS"
+#define ET_CANT_PRODUCTORES 	"CANT_PROD"
+
+/*****************************************************************************/
+
 
 #ifndef COMP_UBUNTU
 
@@ -44,5 +54,10 @@ typedef struct {
 	#define RUTA_ARCH_SEMAFOROS "/home/migue/semaforos"
 
 #endif
+
+/****************************************************************************/
+
+#define TIEMPO_TRABAJO 100
+
 
 #endif /* DEFINICIONES_H_ */

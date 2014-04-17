@@ -33,6 +33,7 @@ ColaMensajes::ColaMensajes(bool crear) {
 	}
 	else {
 		_numCola = msgget(clave, 0660);
+
 	}
 
 	if ( _numCola == -1 ) {

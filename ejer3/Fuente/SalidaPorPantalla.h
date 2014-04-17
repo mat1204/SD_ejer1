@@ -16,7 +16,6 @@ public:
 	virtual ~SalidaPorPantalla();
 
 	void etiqueta(const char* etiqueta, int numero = -1);
-	void etiqueta(const char* etiqueta);
 
 	void mostrar(const char* mensaje);
 
