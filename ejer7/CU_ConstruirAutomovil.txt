@@ -1,0 +1,33 @@
+Caso de Uso "Construir Automovil"
+
+Requerimientos no funcionales:
+a) Las estaciones de trabajo son fijas y estan en el siguiente orden:
+	-Fabricacion Chasis
+	-Pintura
+	-Secado
+	-Armado de Motor
+	-Armado de interior y ruedas
+	-Armado de Puertas
+
+1. Ingresar Orden de fabricacion a la estacion de Fabricacion de Chasis
+
+2. Para cada estacion de trabajo
+En paralelo
+	2.1 Esperar que termine estacion anterior
+	2.2 Tomar Automovil de estacion anterior
+	2.3 Obtener piezas/materiales y realizar tarea
+	2.5 Esperar que estacion siguiente tome automovil
+
+3. Para Estacion Armado de puertas
+	3.1 Si tarea realizada
+		3.2 enviar Automovil a playa de Estacionamiento
+
+----------------------------------------------------------------------
+
+Caso de Uso Extendido "Faltan Materiales"
+
+Insertar en CU "Construir Automovil" en 2.3
+1. Si faltan piezas/materiales 
+	1.1 Solcitar Materiales a repositor del almacen
+	1.2 Esperar que lleguen materiales
+	1.3 continuar en 2.3
