@@ -15,7 +15,22 @@
 #define COMP_UBUNTU
 
 /************************************************************************************/
+namespace MdRobot {
+	enum ModoRobot {
+		ARMADOR,
+		DET_FRECUENCIA
+	};
+};
 
+/************************************************************************************/
+
+typedef struct {
+
+
+} stPlataforma;
+
+
+/************************************************************************************/
 /**
  * Metodos que se pueden consultar en la plataforma
  */
@@ -34,7 +49,12 @@ namespace MtdPlataforma {
 		ROBOT_FREC,
 		ESTADO_ROBOT_ARMAR,
 		ROBOT_ARMAR,
-		ROBOTS_FINALIZADOS
+		ROBOTS_FINALIZADOS,
+
+		// Nuevos
+
+		SEGUIR_TRABAJANDO_FREC,
+		ESPERAR
 	};
 }
 
@@ -90,6 +110,7 @@ typedef struct {
 
 #define ID_SEMS_FREC 'a'
 #define ID_SEMS_ARMAR 'b'
+#define ID_SEM_MUTEX 'c'
 
 namespace EstadoLugarPlataforma {
 	enum EstadoLugarPlataforma {
@@ -111,6 +132,9 @@ typedef struct {
 
 #define idRobotArmar(X) ((X*2) + ID_ROBOT_0)
 #define idRobotFrec(X) ((X*2) + 1 + ID_ROBOT_0)
+
+#define idRobotArmarComp(X)		-1	// Corregir
+#define idRobotFrecComp(X)		-1	// Corregir @TODO
 
 #define numeroDeRobot(X) ((X - ID_ROBOT_0)/2)
 

@@ -1,6 +1,6 @@
 PROJECT(Ejer1)
 set( DCMAKE_BUILD_TYPE Debug)
-set( dependencias PlataformaVirtual.cpp SemRobots.cpp ColaMensajes.cpp SalidaPorPantalla.cpp PlataformaReal.cpp ArchConfiguracion.cpp)
+set( dependencias PlataformaVirtual.cpp SemRobots.cpp ColaMensajes.cpp SalidaPorPantalla.cpp PlataformaReal.cpp ArchConfiguracion.cpp Plataforma.cpp ComponenteRobot.cpp MemoriaCompartida.cpp)
 
 INCLUDE_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
