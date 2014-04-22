@@ -130,13 +130,15 @@ typedef struct {
 #define ID_PLATAFORMA 5
 #define ID_ROBOT_0 100
 
+#define ID_COMP_0 10000
+
 #define idRobotArmar(X) ((X*2) + ID_ROBOT_0)
 #define idRobotFrec(X) ((X*2) + 1 + ID_ROBOT_0)
 
-#define idRobotArmarComp(X)		-1	// Corregir
-#define idRobotFrecComp(X)		-1	// Corregir @TODO
+#define idRobotArmarComp(X)		((X*2) + ID_COMP_0)
+#define idRobotFrecComp(X)		((X*2) + 1 + ID_COMP_0)
 
-#define numeroDeRobot(X) ((X - ID_ROBOT_0)/2)
+#define numeroDeRobot(IdRobot) ((IdRobot - ID_ROBOT_0)/2)
 
 
 /**

@@ -42,22 +42,30 @@ Plataforma::Plataforma(int numeroRobot) {
 		}
 
 		totalMemoria = _capacidadPlataforma * sizeof(LugarPlataforma) +
-				_cantRobots * (sizeof(EstRobotFrec::EstadoRobotFrec) + sizeof(EstRobotArmar::EstadoRobotArmar));
+				_cantRobots * (sizeof(EstRobotFrec::EstadoRobotFrec) + sizeof(EstRobotArmar::EstadoRobotArmar)) +
+				4 * sizeof(int);
 	}
 
 	_capacidad = _capacidadPlataforma;
-	_ocupados = 0;
-	_libres = 0;
 
 
 	_posRobotActual = numeroRobot;
 	_memoriaLugares = new MemoriaCompartida(totalMemoria);
 
-	_posEstArmar = 0;
-	_posEstFrec = _cantRobots * sizeof(EstRobotArmar::EstadoRobotArmar);
+
+	// Creacion de indices
+	_posOcupados = 0;
+	_posLibres = _posOcupados + sizeof(int);
+	_posActivados = _posLibres + sizeof(int);
+	_posArmFinalizados = _posActivados + sizeof(int);
+
+	_posEstArmar = _posArmFinalizados + sizeof(int);
+
+	_posEstFrec = _posEstArmar + (_cantRobots * sizeof(EstRobotArmar::EstadoRobotArmar));
 	_posLugares = _posEstFrec + (_cantRobots * sizeof(EstRobotFrec::EstadoRobotFrec));
 
 
+	// creacion de semaforos
 	_semsArmar = new SemRobots(_cantRobots, ID_SEMS_ARMAR);
 	_semsFrec = new SemRobots(_cantRobots, ID_SEMS_FREC);
 	_mutex = new SemRobots(_cantRobots, ID_SEM_MUTEX);
@@ -73,7 +81,7 @@ Plataforma::~Plataforma() {
 }
 
 
-int Plataforma::estadoRobotFrec() {
+EstRobotFrec::EstadoRobotFrec Plataforma::estadoRobotFrec() {
 	EstRobotFrec::EstadoRobotFrec estado;
 
 	int posicion = _posEstFrec + _posRobotActual * sizeof(estado);
@@ -82,7 +90,7 @@ int Plataforma::estadoRobotFrec() {
 
 	return estado;
 }
-int Plataforma::estadoRobotArmar() {
+EstRobotArmar::EstadoRobotArmar Plataforma::estadoRobotArmar() {
 	EstRobotArmar::EstadoRobotArmar estado;
 
 	int posicion = _posEstArmar + _posRobotActual * sizeof(estado);
@@ -95,6 +103,9 @@ int Plataforma::estadoRobotArmar() {
 void Plataforma::estadoRobotArmar(EstRobotArmar::EstadoRobotArmar estado) {
 	int posicion = _posEstArmar + _posRobotActual * sizeof(estado);
 	_memoriaLugares->escribir(posicion, (void*) &estado, sizeof(estado));
+	if (estado == EstRobotArmar::FINALIZADO) {
+		armadoresFinalizados(1);
+	}
 }
 
 void Plataforma::estadoRobotFrec(EstRobotFrec::EstadoRobotFrec estado) {
@@ -103,6 +114,19 @@ void Plataforma::estadoRobotFrec(EstRobotFrec::EstadoRobotFrec estado) {
 }
 
 void Plataforma::inicializar() {
+	// Inicializacion de variables
+	int valor = 0;
+	_memoriaLugares->escribir(_posOcupados, (void*) &valor, sizeof(int));
+
+	_memoriaLugares->escribir(_posActivados, (void*) &valor, sizeof(int));
+
+	_memoriaLugares->escribir(_posArmFinalizados, (void*) &valor, sizeof(int));
+
+	valor = _capacidad;
+	_memoriaLugares->escribir(_posLibres, (void*) &valor, sizeof(int));
+
+
+	// Inicializacion de estados de robots
 	for (int i = 0; i < _cantRobots ; i++) {
 		estadoRobotArmar(EstRobotArmar::OCUPADO);
 		estadoRobotFrec(EstRobotFrec::OCUPADO);
@@ -138,6 +162,9 @@ void Plataforma::verLugar(int pos, LugarPlataforma& lugar) {
 
 
 bool Plataforma::hayDispositivosActivos() {
+	return (lugaresActivados() > 0);
+
+	/*
 	bool detectado = false;
 	int i = 0;
 
@@ -153,10 +180,11 @@ bool Plataforma::hayDispositivosActivos() {
 	}
 
 	return detectado;
+	*/
 }
 
 
-bool Plataforma::sacarDispositivo(int& numDisp) {
+bool Plataforma::primSacarDispositivo(int& numDisp) {
 	bool encontrado = false;
 	int i = 0;
 
@@ -165,11 +193,80 @@ bool Plataforma::sacarDispositivo(int& numDisp) {
 
 	while (!encontrado && i < _capacidad) {
 		_memoriaLugares->leer(i, (void*) &lugar, tamLugar);
-		encontrado = (lugar.lugar == EstadoLugarPlataforma::ENCENDIDO);
+		if (lugar.lugar == EstadoLugarPlataforma::ENCENDIDO) {
+			encontrado = true;
+			numDisp = lugar.numDispositivo;
+			lugar.numDispositivo = 0;
+
+			lugaresOcupados(-1);
+			lugaresLibres(1);
+		}
 		++i;
 	}
 
 	return encontrado;
+}
+
+bool Plataforma::primColocarDispositivo(int numDispotivo) {
+	bool colocado = false;
+	int i = 0;
+
+	LugarPlataforma lugar;
+	int tamLugar = sizeof(lugar);
+
+	while (!colocado && i < _capacidad) {
+		_memoriaLugares->leer(i, (void*) &lugar, tamLugar);
+
+		if (lugar.lugar == EstadoLugarPlataforma::RESERVADO) {
+			colocado = true;
+
+			lugar.lugar = EstadoLugarPlataforma::OCUPADO;
+			lugar.numDispositivo = numDispotivo;
+			_memoriaLugares->escribir(i, (void*) &lugar, tamLugar);
+
+			lugaresOcupados(1);
+			lugaresLibres(-1);
+
+		}
+
+		++i;
+	}
+
+	return colocado;
+}
+
+bool Plataforma::reservarLugar() {
+
+	bool reservado = false;
+	int i = 0;
+
+
+	LugarPlataforma lugar;
+	while (!reservado && i < _capacidad) {
+		verLugar(i, lugar);
+
+		if (lugar.lugar == EstadoLugarPlataforma::VACIO) {
+			lugar.lugar = EstadoLugarPlataforma::RESERVADO;
+			reservado = true;
+			colocarEnLugar(i, lugar);
+		}
+	}
+
+	return reservado;
+}
+
+int Plataforma::variableMemComp(int posicion, int x) {
+	int valor;
+
+	_memoriaLugares->leer(posicion, (void*) &valor, sizeof(int));
+
+	if ( x != 0 ) {
+		valor += x;
+		_memoriaLugares->escribir(posicion, (void*) &valor, sizeof(int));
+	}
+
+	return valor;
+
 }
 
 /**
@@ -190,8 +287,8 @@ bool Plataforma::seguirTrabajando() {
 	bool seguir = true;
 
 	// Si plataforma vacia ...
-	if (_ocupados == 0) {
-		if (armadoresTerminaron()) {
+	if (lugaresOcupados() == 0) {
+		if (armadoresFinalizados() == _cantRobots) {
 			estadoRobotFrec(EstRobotFrec::FINALIZADO);
 			seguir = false;
 		}
@@ -266,18 +363,64 @@ bool Plataforma::sacarDispositivo(int& numDispositivo) {
 	return sacado;
 }
 
+
+
 /**
+ *
  * Para robot de Armado
+ *
  */
 
 bool Plataforma::plataformaLlena() {
+	waitMutex();
+	EstRobotFrec::EstadoRobotFrec est = estadoRobotFrec();
 
+	if (est == EstRobotFrec::OCUPADO) {
+		estadoRobotArmar(EstRobotArmar::ESPERANDO);
+		signalMutex();
+
+		waitRobotArmar();
+		waitMutex();
+	}
+
+	estadoRobotArmar(EstRobotArmar::OCUPADO);
+
+	bool llena = (lugaresLibres() == 0);
+
+	if (llena == false) {
+		if (reservarLugar()) {
+			estadoRobotArmar(EstRobotArmar::ARMANDO);
+		}
+	}
+
+	signalMutex();
 }
 
 void Plataforma::esperar() {
+	waitMutex();
+	estadoRobotArmar(EstRobotArmar::ESPERANDO);
+	signalMutex();
 
+	waitRobotArmar();
+
+	waitMutex();
+	estadoRobotArmar(EstRobotArmar::OCUPADO);
+	signalMutex();
 }
 
 bool Plataforma::colocarDispositivo(int numDispositivo) {
+	waitMutex();
 
+	bool colocado;
+
+	colocado = primColocarDispositivo(numDispositivo);
+
+	estadoRobotArmar(EstRobotArmar::ESPERANDO);
+	signalMutex();
+
+	waitRobotArmar();
+
+	return colocado;
 }
+
+
