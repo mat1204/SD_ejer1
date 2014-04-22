@@ -1,0 +1,13 @@
+Caso de uso "Administrar Moneda"
+
+
+1. Para cada Cliente
+En paralelo
+	1.1 Realizar alguna tarea
+	1.2 Consultar Precio Moneda
+	1.3 volver 1.1
+
+2. Para cada Operador
+	2.1 Estudiar cambios en economia
+	2.3 Actualizar valor de moneda
+	2.4 volver a 2.1
