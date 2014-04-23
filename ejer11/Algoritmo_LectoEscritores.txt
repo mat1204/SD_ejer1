@@ -1,0 +1,39 @@
+"Algoritmo de Lectores y escritores con prioridad de lectores"
+
+
+
+Abrir(Modo)
+	
+	Si (Modo == Lectura)
+		mutexLectura.wait
+		Si (lectores == 0)
+			mutex.wait
+
+		lectores++
+		mutexLectura.signal
+
+	sino Si (Modo == Escritura)
+
+		mutex.wait
+
+	FinSi
+
+FinAbrir
+
+
+
+Cerrar(Modo)
+	si (Modo == Lectura )
+		mutexLectura.wait
+		lectores--
+		Si (lectores == 0)
+			mutex.signal
+		mutexLectura.signal
+
+	sino Si (Modo == Escritura)
+	
+		mutex.signal
+	FinSi
+
+FinCerrar
+

@@ -50,7 +50,7 @@ Plataforma::Plataforma(int numeroRobot) {
 
 
 	_posRobotActual = numeroRobot;
-	_memoriaLugares = new MemoriaCompartida(totalMemoria);
+	_memoriaLugares = new MemoriaCompartida(RUTA_ARCH_COLA, 'a', totalMemoria);
 
 
 	// Creacion de indices
