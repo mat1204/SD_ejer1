@@ -11,7 +11,7 @@
 #include "ColaMensajes.h"
 
 #include "Definiciones.h"
-#include "ColaMensajes.h"
+#include "ColaComponentes.h"
 #include "Plataforma.h"
 
 class ComponenteRobot {
@@ -53,7 +53,7 @@ private:
 	int _idComponente;
 
 	MensajeCola _ultimoMsj, _respuesta;
-	ColaMensajes _cola;
+	ColaComponentes _cola;
 };
 
 #endif /* COMPONENTEROBOT_H_ */

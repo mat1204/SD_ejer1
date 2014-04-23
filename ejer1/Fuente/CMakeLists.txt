@@ -1,13 +1,17 @@
 PROJECT(Ejer1)
 set(comun ../../comun)
 set( DCMAKE_BUILD_TYPE Debug)
-set( dependencias PlataformaVirtual.cpp SemRobots.cpp ColaMensajes.cpp PlataformaReal.cpp Plataforma.cpp ComponenteRobot.cpp ${comun}/ArchConfiguracion.cpp ${comun}/MemoriaCompartida.cpp)
+set( dependencias SemRobots.cpp ColaComponentes.cpp Plataforma.cpp ComponenteRobot.cpp)
 
 INCLUDE_DIRECTORIES(${comun})
 #add_subdirectory(${comun})
 
 aux_source_directory(../../comun comunes)
 #aux_source_directory(. dependencias)
+
+MESSAGE(EMPIEZAAAAAAAAAAAAAAAAAA)
+MESSAGE(${comunes})
+MESSAGE(TERMINAAAAAAAAAAAAAAAAA)
 
 ADD_EXECUTABLE(lanzador mainLanzador.cpp ${dependencias} ${comunes})
 

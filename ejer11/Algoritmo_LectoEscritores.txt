@@ -2,13 +2,84 @@
 
 
 
+Abrir(modo)
+	
+	Si (modo == Lectura)
+
+		mtxVar.wait
+
+		lectores++
+
+		Si (escritores > 0 )
+			mtxVar.signal
+			mtxLectura.wait
+			mutex.wait
+
+		Sino Si (lectores == 1)
+			mtxVar.signal
+			mutex.wait
+		sino
+			mtxVar.signal
+		FinSi
+
+
+	sino Si (modo == Escritura)
+	
+		mtxVar.wait			
+		escritores++
+		mtxVar.signal
+
+		mutex.wait
+		
+		mtxVar.wait
+		escriturasUsadas++
+		mtxVar.signal
+
+	FinSi
+
+FinAbrir
+
+
+Cerrar(modo)
+
+	Si (modo == Lectura)
+		mtxVar.wait
+		lectores--
+		Si (lectores == 0)
+			mutex.signal
+		FinSi
+		mtxVar.signal
+
+	sino Si (modo == Escritura)
+		
+		mtxVar.wait
+		escritores--	
+		Si (escriturasUtiles > N && lectores > 0)
+			escritruasUtiles = 0
+			mtxLectura.signal
+
+		FinSi
+		mtxVar.signal
+	
+		mutex.signal
+	FinSi
+
+FinCerrar
+
+
+/-----------------------------------------------------------------------------------------------------------------/
+Prioridad de Lectores
+
+var lectores, escritores
+
 Abrir(Modo)
 	
-	Si (Modo == Lectura)
+	Si (Modo == Lectura)	
+
 		mutexLectura.wait
 		Si (lectores == 0)
 			mutex.wait
-
+		FinSi
 		lectores++
 		mutexLectura.signal
 
@@ -24,6 +95,7 @@ FinAbrir
 
 Cerrar(Modo)
 	si (Modo == Lectura )
+
 		mutexLectura.wait
 		lectores--
 		Si (lectores == 0)
@@ -31,7 +103,6 @@ Cerrar(Modo)
 		mutexLectura.signal
 
 	sino Si (Modo == Escritura)
-	
 		mutex.signal
 	FinSi
 

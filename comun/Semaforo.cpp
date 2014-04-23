@@ -1,5 +1,5 @@
 /*
- * SemRobots.cpp
+ * Semaforo.cpp
  *
  *  Created on: 02/04/2014
  *      Author: migue
@@ -51,10 +51,10 @@ Semaforo::Semaforo(const char* ruta ,int cant, char id) {
 	}
 }
 
-SemRobots::~SemRobots() {
+Semaforo::~Semaforo() {
 }
 
-void SemRobots::inicializar(int val) {
+void Semaforo::inicializar(int val) {
 	semnum valor;
 	valor.val = val;
 
@@ -64,7 +64,7 @@ void SemRobots::inicializar(int val) {
 	}
 }
 
-void SemRobots::wait(int numRobot) {
+void Semaforo::wait(int numRobot) {
 	if ( numRobot < _cant && numRobot >= 0 ) {
 		struct sembuf op;
 		op.sem_num = numRobot;
@@ -81,7 +81,7 @@ void SemRobots::wait(int numRobot) {
 	}
 }
 
-void SemRobots::signal(int numRobot) {
+void Semaforo::signal(int numRobot) {
 	if ( numRobot < _cant && numRobot >= 0 ) {
 		struct sembuf op;
 		op.sem_num = numRobot;
@@ -98,7 +98,7 @@ void SemRobots::signal(int numRobot) {
 	}
 }
 
-void SemRobots::destruir() {
+void Semaforo::destruir() {
 	if (semctl( _semId, 0 , IPC_RMID) == -1) {
 		_salida->error("Error al intentar destruir semaforos");
 	}

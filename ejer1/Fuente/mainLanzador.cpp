@@ -8,7 +8,7 @@
 
 #include "Definiciones.h"
 
-#include "ColaMensajes.h"
+#include "ColaComponentes.h"
 #include "SemRobots.h"
 #include "SalidaPorPantalla.h"
 #include "ArchConfiguracion.h"
@@ -223,7 +223,7 @@ void inicializar() {
 	frec.inicializar(0);
 	armar.inicializar(1);
 
-	ColaMensajes cola(true);
+	ColaComponentes cola(true);
 }
 
 void correr() {
@@ -284,7 +284,7 @@ void limpiar() {
 	frec.destruir();
 	armar.destruir();
 
-	ColaMensajes cola;
+	ColaComponentes cola;
 	cola.destruir();
 
 	std::string cmd("rm ");

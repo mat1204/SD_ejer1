@@ -5,8 +5,8 @@
  *      Author: migue
  */
 
-#ifndef SEMROBOTS_H_
-#define SEMROBOTS_H_
+#ifndef SEMAFORO_H_
+#define SEMAFORO_H_
 
 #include "SalidaPorPantalla.h"
 
@@ -27,4 +27,4 @@ private:
 	SalidaPorPantalla* _salida;
 };
 
-#endif /* SEMROBOT// TODO Auto-generated constructor stubS_H_ */
+#endif /* SEMAFORO// TODO Auto-generated constructor stubS_H_ */

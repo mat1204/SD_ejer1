@@ -8,7 +8,6 @@
 #ifndef COLAMENSAJES_H_
 #define COLAMENSAJES_H_
 
-#include "Definiciones.h"
 #include "SalidaPorPantalla.h"
 
 class ColaMensajes {
