@@ -11,7 +11,7 @@
 #include "Definiciones.h"
 
 #include "SemRobots.h"
-#include "MemoriaCompartida.h"
+#include "../../comun/MemoriaCompartida.h"
 
 
 class Plataforma {
@@ -45,15 +45,18 @@ public:
 
 	void inicializar();
 
+	void destruir();
+
 	virtual ~Plataforma();
 private:
+
+	void mostrarVariables();
 
 	EstRobotFrec::EstadoRobotFrec estadoRobotFrec();
 	EstRobotArmar::EstadoRobotArmar estadoRobotArmar();
 
 	void estadoRobotArmar(EstRobotArmar::EstadoRobotArmar estado);
 	void estadoRobotFrec(EstRobotFrec::EstadoRobotFrec estado);
-
 
 	//
 	void waitMutex()		{ _mutex->wait(0); }

@@ -12,6 +12,7 @@
 #include "SemRobots.h"
 #include "SalidaPorPantalla.h"
 #include "ArchConfiguracion.h"
+#include "Plataforma.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -37,6 +38,8 @@ void inicializar();
 void correr();
 
 void limpiar();
+
+void mostrarConfiguracion();
 
 void testConfiguracion() {
 	int p1=23, p2 = 2 ,p3=284455 , p4 = 34568291;
@@ -103,51 +106,14 @@ void testConfiguracion() {
 
 }
 
-int test() {
-	std::stringstream ss;
-
-	std::string mm;
-
-
-	ss << "hola";
-
-	ss << 2;
-
-	ss << "chau";
-
-	ss << "ma bb";
-
-	ss << 3;
-
-	ss << "jaja";
-
-	//ss >> mm;
-
-	mm = ss.str();
-	std::cout << "1) \""<< mm <<"\"" << std::endl;
-
-	ss.str("");
-
-	ss << 1 << "2345" << 67;
-
-	ss >> mm;
-
-	std::cout << "2) \""<< mm <<"\"" << std::endl;
-	std::cout << "3) \""<< ss. str() <<"\"" << std::endl;
-
-
-	return 0;
-}
-
 int main(int argc, char** argv) {
-
-	//return test();
 
 	if (argc != 2) {
 		std::cout << "Se debe Ingresar -c,-i o -t para configurar, iniciar o eliminar recursos." << std::endl;
 		exit(2);
 	}
 
+	SalidaPorPantalla::instancia().etiqueta("Lanzador");
 
 	if (strcmp(argv[1], "-c") == 0) {
 		configurar();
@@ -159,8 +125,29 @@ int main(int argc, char** argv) {
 	else if ( strcmp(argv[1] , "-t") == 0 ) {
 		limpiar();
 	}
+	else if ( strcmp(argv[1], "-m") == 0 ) {
+		mostrarConfiguracion();
+	}
 
 	return 0;
+}
+
+void mostrarConfiguracion() {
+	ArchConfiguracion config;
+
+	if (config.lecturaValida() == false) {
+		SalidaPorPantalla::instancia().mostrar("No se pudo leer archivo de configuracion");
+		return;
+	}
+
+	int valor;
+
+	config.leer(ET_CANT_ROBOTS, valor);
+	SalidaPorPantalla::instancia().mostrar("Cantidad de Robots: ", valor);
+
+	config.leer(ET_CAPCIDAD_PLAT, valor);
+	SalidaPorPantalla::instancia().mostrar("Capacidad de Plataforma: ", valor);
+
 }
 
 
@@ -206,6 +193,8 @@ void configurar() {
 
 void inicializar() {
 
+	SalidaPorPantalla::instancia().mostrar("inicializando recursos");
+
 	ArchConfiguracion config;
 
 	if (mknod(RUTA_ARCH_COLA, 0660, 0) == -1)
@@ -217,30 +206,20 @@ void inicializar() {
 
 	config.leer(ET_CANT_ROBOTS, cantRobots);
 
-	SemRobots frec(cantRobots, ID_SEMS_FREC);
-	SemRobots armar(cantRobots, ID_SEMS_ARMAR);
-
-	frec.inicializar(0);
-	armar.inicializar(1);
-
 	ColaComponentes cola(true);
+
+	Plataforma plat;
+	plat.inicializar();
+
+	SalidaPorPantalla::instancia().mostrar("recursos inicializados");
 }
 
 void correr() {
-	std::string capacidad;
-
-	// lanzar plataforma
-
 	int pid;
 
-	pid = fork();
-
-	if (pid == 0) {
-		execl("./plataforma","plataforma", (char*) NULL);
-	}
-
-
 	std::stringstream ss,nombre;
+
+	SalidaPorPantalla::instancia().mostrar("Lanzando procesos");
 
 	for (int i = 0; i < cantRobots ; i++) {
 		ss << i;
@@ -254,6 +233,9 @@ void correr() {
 			perror("Error al iniciar proceso RobotArmar");
 			exit(2);
 		}
+		else {
+			SalidaPorPantalla::instancia().mostrar("Lanzado proceso Armador-", i);
+		}
 
 		nombre.str("");
 		nombre << "RFrec-" << i;
@@ -263,6 +245,9 @@ void correr() {
 			execl("./robotFrec",nombre.str().c_str(), ss.str().c_str(), (char*) NULL);
 			perror("Error al iniciar proceso RobotFrec");
 			exit(2);
+		}
+		else {
+			SalidaPorPantalla::instancia().mostrar("Lanzado proceso Frecuencia-", i);
 		}
 
 		std::cout << "Se ARRANCARON los procesos del robot " << ss.str() << std::endl;
@@ -274,15 +259,8 @@ void correr() {
 }
 
 void limpiar() {
-	ArchConfiguracion config;
-
-	config.leer(ET_CANT_ROBOTS, cantRobots);
-
-	SemRobots frec(cantRobots, ID_SEMS_FREC);
-	SemRobots armar(cantRobots, ID_SEMS_ARMAR);
-
-	frec.destruir();
-	armar.destruir();
+	Plataforma plat;
+	plat.destruir();
 
 	ColaComponentes cola;
 	cola.destruir();

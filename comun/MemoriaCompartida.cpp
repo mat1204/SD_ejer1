@@ -30,7 +30,7 @@ MemoriaCompartida::MemoriaCompartida(const char* ruta, char id, int tamanio) {
 	_tamanio = tamanio;
 	_idMemoria = shmget(clave, _tamanio, IPC_CREAT | 0660);
 
-	if (_idMemoria) {
+	if (_idMemoria == -1) {
 		_salida->error(strerror(errno));
 		exit(EXIT_FAILURE);
 	}

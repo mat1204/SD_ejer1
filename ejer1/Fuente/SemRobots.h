@@ -8,7 +8,7 @@
 #ifndef SEMROBOTS_H_
 #define SEMROBOTS_H_
 
-#include "Semaforo.h"
+#include "../../comun/Semaforo.h"
 
 class SemRobots {
 public:

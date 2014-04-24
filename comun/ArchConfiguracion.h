@@ -48,6 +48,8 @@ public:
 
 	const std::string armarEtiqueta(const std::string& snombre, int numero);
 
+	bool lecturaValida();
+
 	virtual ~ArchConfiguracion();
 private:
 

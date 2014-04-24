@@ -180,3 +180,7 @@ const std::string ArchConfiguracion::armarEtiqueta(const std::string& snombre, i
 
 	return ss.str();
 }
+
+bool ArchConfiguracion::lecturaValida() {
+	return _archivo.is_open();
+}

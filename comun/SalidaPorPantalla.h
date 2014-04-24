@@ -16,7 +16,6 @@ public:
 	virtual ~SalidaPorPantalla();
 
 	void etiqueta(const char* etiqueta, int numero = -1);
-	void etiqueta(const char* etiqueta);
 
 	void mostrar(const char* mensaje);
 
@@ -33,6 +32,7 @@ public:
 	void agregarAlMsj(int x);
 	void agregarAlMsj(const std::string& texto);
 	void agregarAlMsj(const char* texto);
+	void agregarAlMsj(const char* texto, int x);
 
 	void mostrarMsj();
 

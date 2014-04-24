@@ -86,6 +86,12 @@ void SalidaPorPantalla::agregarAlMsj(const std::string& texto) {
 	_ss << texto;
 }
 
+void SalidaPorPantalla::agregarAlMsj(const char* texto, int x) {
+	_ss << texto;
+	_ss << x;
+}
+
+
 void SalidaPorPantalla::agregarAlMsj(const char* texto) {
 	_ss << texto;
 }

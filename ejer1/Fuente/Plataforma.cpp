@@ -105,6 +105,7 @@ void Plataforma::estadoRobotArmar(EstRobotArmar::EstadoRobotArmar estado) {
 	_memoriaLugares->escribir(posicion, (void*) &estado, sizeof(estado));
 	if (estado == EstRobotArmar::FINALIZADO) {
 		armadoresFinalizados(1);
+		SalidaPorPantalla::instancia().mostrar("Armador Finalizao");
 	}
 }
 
@@ -114,6 +115,7 @@ void Plataforma::estadoRobotFrec(EstRobotFrec::EstadoRobotFrec estado) {
 }
 
 void Plataforma::inicializar() {
+
 	// Inicializacion de variables
 	int valor = 0;
 	_memoriaLugares->escribir(_posOcupados, (void*) &valor, sizeof(int));
@@ -127,10 +129,14 @@ void Plataforma::inicializar() {
 
 
 	// Inicializacion de estados de robots
+	int aux = _posRobotActual;
 	for (int i = 0; i < _cantRobots ; i++) {
+		_posRobotActual = i;
 		estadoRobotArmar(EstRobotArmar::OCUPADO);
 		estadoRobotFrec(EstRobotFrec::OCUPADO);
 	}
+
+	_posRobotActual = aux;
 
 	LugarPlataforma lugar;
 
@@ -148,6 +154,15 @@ void Plataforma::inicializar() {
 	_semsFrec->inicializar(0);
 
 	_mutex->inicializar(1);
+}
+
+void Plataforma::destruir() {
+	_semsArmar->destruir();
+	_semsFrec->destruir();
+
+	_mutex->destruir();
+
+	_memoriaLugares->destruir();
 }
 
 void Plataforma::colocarEnLugar(int pos, const LugarPlataforma& lugar) {
@@ -266,8 +281,18 @@ int Plataforma::variableMemComp(int posicion, int x) {
 	}
 
 	return valor;
-
 }
+
+
+void Plataforma::mostrarVariables() {
+	SalidaPorPantalla::instancia().agregarAlMsj("Lugares libres: ", lugaresLibres());
+	SalidaPorPantalla::instancia().agregarAlMsj(", ocupados: ", lugaresOcupados());
+	SalidaPorPantalla::instancia().agregarAlMsj(", activados: ", lugaresActivados());
+	SalidaPorPantalla::instancia().agregarAlMsj(", Armadores Finalizados: ", armadoresFinalizados());
+
+	SalidaPorPantalla::instancia().mostrarMsj();
+}
+
 
 /**
  *
@@ -373,6 +398,9 @@ bool Plataforma::sacarDispositivo(int& numDispositivo) {
 
 bool Plataforma::plataformaLlena() {
 	waitMutex();
+
+	mostrarVariables();
+
 	EstRobotFrec::EstadoRobotFrec est = estadoRobotFrec();
 
 	if (est == EstRobotFrec::OCUPADO) {

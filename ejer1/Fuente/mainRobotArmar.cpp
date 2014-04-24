@@ -72,7 +72,8 @@ int main(int argc,char** argv) {
 	salida->mostrarMsj();
 
 
-	PlataformaVirtual p(cantRobots, idReal, pilas, disp);
+	//PlataformaVirtual p(numRobot, pilas, disp);
+	PlataformaVirtual p(numRobot,pilas, disp);
 	iPlataformaPoner* plataforma = &p;
 
 	int numDispositivo = 100 * numRobot + 1000;

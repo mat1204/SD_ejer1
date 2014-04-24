@@ -7,7 +7,7 @@
 
 
 #include "PlataformaVirtual.h"
-#include "ArchConfiguracion.h"
+#include "../../comun/ArchConfiguracion.h"
 #include "SalidaPorPantalla.h"
 
 #include <string.h>
@@ -39,7 +39,6 @@ int main(int argc,char** argv) {
 
 	SalidaPorPantalla::instancia().etiqueta("RobotFrec", numRobot);
 
-	int idRobot = idRobotFrec(numRobot);
 
 	//SalidaPorPantalla::instancia().mostrar("Se inicio proceso de RobotFrec.");
 	SalidaPorPantalla::instancia().agregarAlMsj("Se inicio RobotFrec_");
@@ -48,7 +47,7 @@ int main(int argc,char** argv) {
 
 	SalidaPorPantalla* salida = &SalidaPorPantalla::instancia();
 
-	PlataformaVirtual p(cantRobot, idRobot);
+	PlataformaVirtual p(numRobot);
 
 	iPlataformaSacar* plataforma = &p;
 
@@ -62,8 +61,6 @@ int main(int argc,char** argv) {
 			if (plataforma->sacarDispositivo(numDispSacado)) {
 				salida->agregarAlMsj("Se saco dispositivo numero: ");
 				salida->agregarAlMsj(numDispSacado);
-				salida->agregarAlMsj(", por el Robot ");
-				salida->agregarAlMsj(numeroDeRobot(idRobot));
 				salida->mostrarMsj();
 			}
 		}

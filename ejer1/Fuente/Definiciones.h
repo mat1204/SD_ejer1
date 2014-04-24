@@ -132,11 +132,11 @@ typedef struct {
 
 #define ID_COMP_0 10000
 
-#define idRobotArmar(X) ((X*2) + ID_ROBOT_0)
-#define idRobotFrec(X) ((X*2) + 1 + ID_ROBOT_0)
+#define idRobotArmar(_numRobot_) ((_numRobot_*2) + ID_ROBOT_0)
+#define idRobotFrec(_numRobot_) ((_numRobot_*2) + 1 + ID_ROBOT_0)
 
-#define idRobotArmarComp(X)		((X*2) + ID_COMP_0)
-#define idRobotFrecComp(X)		((X*2) + 1 + ID_COMP_0)
+#define idRobotArmarComp(_numRobot_)		((_numRobot_*2) + ID_COMP_0)
+#define idRobotFrecComp(_numRobot_)		((_numRobot_*2) + 1 + ID_COMP_0)
 
 #define numeroDeRobot(IdRobot) ((IdRobot - ID_ROBOT_0)/2)
 
@@ -152,6 +152,6 @@ typedef struct {
 #define ET_PILAS_ROBOT		"PILAS_ROBOT_"
 
 
-#define TIEMPO_TRABAJO    100
+#define TIEMPO_TRABAJO    10000
 
 #endif /* DEFINICIONES_H_ */

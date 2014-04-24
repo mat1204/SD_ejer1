@@ -19,11 +19,13 @@ public:
 	ComponenteRobot(int numeroDeRobot, MdRobot::ModoRobot tipo);
 	virtual ~ComponenteRobot();
 
+	int correr();
+
+private:
+
 	int iniciarParaArmado();
 
 	int iniciarParaFrecuencia();
-
-private:
 
 	void esperarMsj();
 	void enviarRespuesta();
