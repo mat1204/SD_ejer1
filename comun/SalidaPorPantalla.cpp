@@ -64,6 +64,13 @@ void SalidaPorPantalla::error(const char* msj, int x) {
 	_ss.str("");
 }
 
+void SalidaPorPantalla::error(const char* msj, const char* msj2) {
+	_ss << msj;
+	_ss << msj2;
+	this->error(_ss.str());
+	_ss.str("");
+}
+
 void SalidaPorPantalla::imprimir() {
 	write(fileno(stdout), _buffer, strlen(_buffer));
 }

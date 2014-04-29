@@ -29,7 +29,9 @@ int main(int argc, char** argv) {
 
 	salida->etiqueta("Consumidor-", numConsumidor);
 
-	iProcesar cons = GestorPedidos(numConsumidor);
+	GestorPedidos a(numConsumidor);
+
+	iProcesar* cons = &a;
 
 	stPedido pedido;
 	while (true) {

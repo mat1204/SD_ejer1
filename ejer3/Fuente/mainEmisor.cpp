@@ -8,9 +8,11 @@
 #include "SalidaPorPantalla.h"
 #include "GestorPedidos.h"
 
+#include <stdlib.h>
+
 int main(int argc, char** argv) {
 
-	SalidaPorPantalla* salida = SalidaPorPantalla::instancia();
+	SalidaPorPantalla* salida = &SalidaPorPantalla::instancia();
 
 	if (argc != 2) {
 		salida->mostrar("Se necesita numero de productor");
@@ -23,15 +25,19 @@ int main(int argc, char** argv) {
 	ss << argv[1];
 	ss >> numProductor;
 
-	iSolicitar* prod = &GestorPedidos();
+	salida->etiqueta("Productor-", numProductor);
+
+	GestorPedidos a;
+
+	iSolicitar* prod = &a;
 
 	int cantPedidos = 10;
-	int i = 0;
+	int i = 1;
 
 	stPedido pedido;
-	while ( i < cantPedidos) {
+	while ( i <= cantPedidos) {
 
-		pedido.num = i*100 + 7*i + 3*i;
+		pedido.num = numProductor*100 + 8*i + 3*i;
 
 		salida->mostrar("Ingresando pedido n°", pedido.num);
 

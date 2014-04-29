@@ -27,6 +27,7 @@ public:
 
 	void error(const std::string& msj);
 	void error(const char* msj);
+	void error(const char* msj, const char* msj2);
 	void error(const char* msj, int x);
 
 	void agregarAlMsj(int x);

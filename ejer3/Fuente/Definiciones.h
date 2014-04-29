@@ -57,7 +57,7 @@ typedef struct {
 
 /****************************************************************************/
 
-#define TIEMPO_TRABAJO 100
+#define TIEMPO_TRABAJO 5000000
 
 
 #endif /* DEFINICIONES_H_ */

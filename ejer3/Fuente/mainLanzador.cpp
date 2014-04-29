@@ -12,9 +12,9 @@
 
 #include "ArchConfiguracion.h"
 #include "SalidaPorPantalla.h"
+#include "../../comun/GestorArch.h"
 
-
-#include "ColaMensajes.h"
+#include "ColaComponentes.h"
 
 void configurar() {
 	int prod,cons;
@@ -34,10 +34,17 @@ void configurar() {
 }
 
 void inicializar() {
-	ColaMensajes cola(true);
+	SalidaPorPantalla::instancia().mostrar("Inicializando recursos...");
+
+	GestorArch g;
+	g.crearArchivo(RUTA_ARCH_COLA);
+
+	ColaComponentes cola(true);
 }
 
 void correr() {
+
+	SalidaPorPantalla::instancia().mostrar("Lanzado procesos...");
 
 	ArchConfiguracion config;
 
@@ -49,14 +56,50 @@ void correr() {
 		exit(EXIT_FAILURE);
 	}
 
+	int pid;
+
+	std::stringstream ss;
+
+	for (int i = 0 ; i < prod ; ++i) {
+		ss << i + 1;
+
+		pid = fork();
+
+		if (pid == 0) {
+			execl("./prod","Prod", ss.str().c_str(),NULL);
+			SalidaPorPantalla::instancia().error("No se pudo iniciar proceso Productor n°", i+1);
+			exit(EXIT_FAILURE);
+		}
+
+		ss.str("");
+	}
+
+
+	for (int i = 0 ; i < cons ; ++i) {
+		ss << i + 1;
+		pid = fork();
+		if (pid == 0) {
+			execl("./cons", "Cons", ss.str().c_str(), NULL);
+			SalidaPorPantalla::instancia().error("No se pudo iniciar proceso Consumidor n°", i+1);
+			exit(EXIT_FAILURE);
+		}
+		ss.str("");
+	}
+
+	SalidaPorPantalla::instancia().mostrar("Lanzados todos los procesos.");
 }
 
 void limpiar() {
-	ColaMensajes cola;
+	ColaComponentes cola;
 	cola.destruir();
+
+	GestorArch g;
+	g.destruiArchivo(RUTA_ARCH_COLA);
 }
 
 int main(int argc, char** argv) {
+
+	SalidaPorPantalla::instancia().etiqueta("Lanzador");
 
 	if (argc != 2) {
 		SalidaPorPantalla::instancia().etiqueta("arg");
@@ -65,7 +108,6 @@ int main(int argc, char** argv) {
 		SalidaPorPantalla::instancia().mostrar("\t -t limpiar recursos");
 		exit(EXIT_SUCCESS);
 	}
-
 
 	if (strcmp(argv[1], "-c") == 0) {
 		configurar();

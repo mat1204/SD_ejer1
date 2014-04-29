@@ -15,15 +15,16 @@ ComponenteRobot::ComponenteRobot(int numeroRobot, MdRobot::ModoRobot tipo) : _pl
 	_tipo = tipo;
 	std::string capacidad;
 
+	salida = &SalidaPorPantalla::instancia();
 
 	_seguirTrabajando = true;
 
 	if (tipo == MdRobot::ARMADOR) {
-		SalidaPorPantalla::instancia().etiqueta("CompArmado", _numeroRobot);
+		salida->etiqueta("CompArmado", _numeroRobot);
 		_idComponente = idRobotArmarComp(numeroRobot);
 	}
 	else if (tipo == MdRobot::DET_FRECUENCIA) {
-		SalidaPorPantalla::instancia().etiqueta("CompFrec", _numeroRobot);
+		salida->etiqueta("CompFrec", _numeroRobot);
 		_idComponente = idRobotFrecComp(numeroRobot);
 	}
 	else {
@@ -31,10 +32,7 @@ ComponenteRobot::ComponenteRobot(int numeroRobot, MdRobot::ModoRobot tipo) : _pl
 		exit(EXIT_FAILURE);
 	}
 
-	salida = &SalidaPorPantalla::instancia();
-
 	salida->mostrar("Componente iniciado");
-
 }
 
 ComponenteRobot::~ComponenteRobot() {
@@ -64,7 +62,7 @@ int ComponenteRobot::iniciarParaArmado() {
 			case MtdPlataforma::PLATAFORMA_LLENA: procPlataformaLlena(); break;
 			case MtdPlataforma::ESPERAR: procEsperar(); break;
 			case MtdPlataforma::COLOCAR_DISP: procColocarDispositivo(); break;
-			default: break;
+			default:salida->error("Metodo de Plataforma no reconocido."); break;
 		}
 
 		enviarRespuesta();
@@ -84,7 +82,7 @@ int ComponenteRobot::iniciarParaFrecuencia() {
 			case MtdPlataforma::DETERCAR_FREC: procDetectarFrecuencia(); break;
 			case MtdPlataforma::SACAR_DISP: procSacarDispositivo(); break;
 			case MtdPlataforma::SEGUIR_TRABAJANDO_FREC: procSeguirTrabajando(); break;
-			default: break;
+			default: salida->error("Metodo de Plataforma no reconocido."); break;
 		}
 
 		enviarRespuesta();
@@ -104,6 +102,8 @@ void ComponenteRobot::enviarRespuesta() {
 
 
 void ComponenteRobot::procDetectarFrecuencia() {
+	SalidaPorPantalla::instancia().mostrar("llamando proceso DetectarFrecuencia()");
+
 	_respuesta.resultado.booleano = _plataforma.detectarFrecuencia();
 
 	if (_respuesta.resultado.booleano) {
@@ -133,6 +133,9 @@ void ComponenteRobot::procSacarDispositivo() {
 }
 
 void ComponenteRobot::procPlataformaLlena(){
+
+	SalidaPorPantalla::instancia().mostrar("llamando proceso PlataformaLlena()");
+
 	_respuesta.resultado.booleano = _plataforma.plataformaLlena();
 
 
@@ -148,6 +151,8 @@ void ComponenteRobot::procEsperar() {
 }
 
 void ComponenteRobot::procColocarDispositivo() {
+	SalidaPorPantalla::instancia().mostrar("llamando proceso ColocarDispositivo()");
+
 	_respuesta.resultado.booleano = _plataforma.colocarDispositivo(_ultimoMsj.numDispositivo);
 	_respuesta.numDispositivo = _ultimoMsj.numDispositivo;
 }

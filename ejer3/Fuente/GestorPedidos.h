@@ -11,7 +11,7 @@
 #include "iProcesar.h"
 #include "iSolicitar.h"
 
-#include "ColaMensajes.h"
+#include "ColaComponentes.h"
 
 #define TIPO_CONSUMIDOR		0
 #define TIPO_PRODUCTOR 		1
@@ -27,7 +27,7 @@ public:
 	virtual void gestionarPedido(const stPedido& pedido);
 
 private:
-	ColaMensajes _cola;
+	ColaComponentes _cola;
 	int _cantConsumidores;
 	int _numConsumidor;
 

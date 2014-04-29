@@ -1,9 +1,12 @@
 project(Ejer3)
 set (DCMAKE_BUILD_TYPE Debug)
-set (dependencias ColaMensajes.cpp GestorPedidos.cpp SalidaPorPantalla.cpp ArchConfiguracion.cpp)
-set (var_inutil Sin_USAR)
+set (dependencias ColaComponentes.cpp GestorPedidos.cpp)
 
-add_executable(lanzador mainLanzador.cpp ${dependencias})
-add_executable(prod mainEmisor.cpp ${dependencias})
-add_executable(cons mainReceptor.cpp ${dependencias})
+include_directories(../../comun)
+
+aux_source_directory(../../comun comunes)
+
+add_executable(lanzador mainLanzador.cpp ${dependencias} ${comunes})
+add_executable(prod mainEmisor.cpp ${dependencias} ${comunes})
+add_executable(cons mainReceptor.cpp ${dependencias} ${comunes})
 

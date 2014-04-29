@@ -12,12 +12,17 @@
 #include <sstream>
 #include <stdlib.h>
 
-ArchConfiguracion::ArchConfiguracion(bool escritura) : _ruta("./config.cfg") {
+#define NOMBRE_ARCHIVO "./config.cfg"
+
+ArchConfiguracion::ArchConfiguracion(bool escritura) : _ruta(NOMBRE_ARCHIVO) {
 
 	_archActualizado = true;
 
 	if (escritura) {
-		system("rm ./config.cfg");
+		std::string cmd("rm ");
+		cmd += NOMBRE_ARCHIVO;
+		system(cmd.c_str());
+
 		_archivo.open(_ruta.c_str(), std::fstream::in | std::fstream::out | std::fstream::app | std::fstream::binary);
 	}
 	else {
@@ -27,9 +32,7 @@ ArchConfiguracion::ArchConfiguracion(bool escritura) : _ruta("./config.cfg") {
 		}
 		else
 			levantar();
-
 	}
-
 }
 
 
@@ -183,4 +186,8 @@ const std::string ArchConfiguracion::armarEtiqueta(const std::string& snombre, i
 
 bool ArchConfiguracion::lecturaValida() {
 	return _archivo.is_open();
+}
+
+const char* nombreArchivo() {
+	return NOMBRE_ARCHIVO;
 }

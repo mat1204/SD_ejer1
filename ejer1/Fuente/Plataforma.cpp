@@ -7,6 +7,7 @@
 
 #include "Plataforma.h"
 #include "ArchConfiguracion.h"
+#include "../../comun/SalidaPorPantalla.h"
 #include <stdlib.h>
 
 /**
@@ -150,7 +151,7 @@ void Plataforma::inicializar() {
 
 	// inicializacion de semaforos
 
-	_semsArmar->inicializar(1);
+	_semsArmar->inicializar(0);
 	_semsFrec->inicializar(0);
 
 	_mutex->inicializar(1);
@@ -335,16 +336,21 @@ bool Plataforma::detectarFrecuencia() {
 		estadoRobotFrec(EstRobotFrec::ESPERANDO);
 		signalMutex();
 		waitRobotFrec();
+
+		waitMutex();
 	}
-	else {
-		signalMutex();
-	}
+//	else {
+//		signalMutex();
+//	}
 
 	detectada = hayDispositivosActivos();
 
 	if (detectada == false) {
 		estadoRobotFrec(EstRobotFrec::ESPERANDO);
 		signalMutex();
+
+		signalRobotArmar();
+
 		waitRobotFrec();
 	}
 	else {
@@ -362,6 +368,9 @@ bool Plataforma::sacarDispositivo(int& numDispositivo) {
 	if (est == EstRobotArmar::ARMANDO) {
 		estadoRobotFrec(EstRobotFrec::ESPERANDO);
 		signalMutex();
+
+		signalRobotArmar();
+
 		waitRobotFrec();
 
 		waitMutex();
@@ -407,6 +416,8 @@ bool Plataforma::plataformaLlena() {
 		estadoRobotArmar(EstRobotArmar::ESPERANDO);
 		signalMutex();
 
+		signalRobotFrec();
+
 		waitRobotArmar();
 		waitMutex();
 	}
@@ -429,6 +440,7 @@ void Plataforma::esperar() {
 	estadoRobotArmar(EstRobotArmar::ESPERANDO);
 	signalMutex();
 
+	signalRobotFrec();
 	waitRobotArmar();
 
 	waitMutex();
@@ -444,7 +456,10 @@ bool Plataforma::colocarDispositivo(int numDispositivo) {
 	colocado = primColocarDispositivo(numDispositivo);
 
 	estadoRobotArmar(EstRobotArmar::ESPERANDO);
+
 	signalMutex();
+
+	signalRobotFrec();
 
 	waitRobotArmar();
 

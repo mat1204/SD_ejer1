@@ -50,6 +50,8 @@ public:
 
 	bool lecturaValida();
 
+	const char* nombreArchivo();
+
 	virtual ~ArchConfiguracion();
 private:
 

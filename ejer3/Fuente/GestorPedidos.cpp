@@ -27,19 +27,18 @@ GestorPedidos::GestorPedidos(int numeroConsumidor) {
 }
 
 GestorPedidos::~GestorPedidos() {
-
 }
 
 void GestorPedidos::sacarPedido(stPedido& pedido) {
 	stMensaje msj;
 	_cola.recibir(msj, _numConsumidor);
 
-	memcpy(&pedido, &msj.pedido, TAM_PEDIDO);
+	memcpy((void*)&pedido, (void*)&msj.pedido, TAM_PEDIDO);
 }
 
 void GestorPedidos::gestionarPedido(const stPedido& pedido) {
 	stMensaje msj;
-	memcpy(&msj.pedido, &pedido, TAM_PEDIDO);
+	memcpy((void*) &msj.pedido, (const void*) &pedido, TAM_PEDIDO);
 
 	for (int i=0 ; i < _cantConsumidores ; ++i) {
 		msj._mtype = i+1;

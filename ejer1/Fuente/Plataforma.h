@@ -59,14 +59,14 @@ private:
 	void estadoRobotFrec(EstRobotFrec::EstadoRobotFrec estado);
 
 	//
-	void waitMutex()		{ _mutex->wait(0); }
-	void signalMutex()	{ _mutex->signal(0); }
+	void waitMutex()		{ _salida->mostrar("(MUTEX) wait");_mutex->wait(0); }
+	void signalMutex()	{ _salida->mostrar("(MUTEX) signal");_mutex->signal(0); }
 
-	void waitRobotFrec() 		{ _semsFrec->wait(_posRobotActual); 	}
-	void signalRobotFrec() 	{ _semsFrec->signal(_posRobotActual); 	}
+	void waitRobotFrec() 		{ _salida->mostrar("(SEMAFORO) Esperando por turno, robot n°", _posRobotActual); _semsFrec->wait(_posRobotActual); 	}
+	void signalRobotFrec() 	{ _salida->mostrar("(SEMAFORO) Paso turno a Robot Frecuencia n°", _posRobotActual); _semsFrec->signal(_posRobotActual); 	}
 
-	void waitRobotArmar() 	{ _semsArmar->wait(_posRobotActual);	}
-	void signalRobotArmar() 	{ _semsArmar->signal(_posRobotActual); 	}
+	void waitRobotArmar() 	{ _salida->mostrar("(SEMAFORO) Esperando por turno, robot n°", _posRobotActual); _semsArmar->wait(_posRobotActual);	}
+	void signalRobotArmar() 	{ _salida->mostrar("(SEMAFORO) Paso turno a Robot Armar n°", _posRobotActual); _semsArmar->signal(_posRobotActual); 	}
 
 	// para lugares de la plataforma
 	void colocarEnLugar(int posicion, const LugarPlataforma& lugar);
