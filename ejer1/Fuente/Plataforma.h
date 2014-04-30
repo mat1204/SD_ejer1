@@ -21,7 +21,7 @@ public:
 	/**
 	 * Retorna true si logra activar un dispositvo
 	 */
-	bool activarDispositivoAlAzar();
+	bool activarDispositivo(int posicion);
 
 	/**
 	 * Para robot de Frecuencia
@@ -46,6 +46,8 @@ public:
 	void inicializar();
 
 	void destruir();
+
+	int capacidad();
 
 	virtual ~Plataforma();
 private:
@@ -106,7 +108,6 @@ private:
 	int _posActivados;
 	int _posArmFinalizados;
 
-	int capacidad();
 
 	// retorna valor actual o, suma cantidad parametro retornado el valor posterior
 	int lugaresLibres(int x = 0) { return variableMemComp(_posLibres, x); }

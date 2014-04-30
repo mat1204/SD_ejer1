@@ -46,11 +46,13 @@ void SalidaPorPantalla::mostrar(const std::string& mensaje) {
 
 void SalidaPorPantalla::error(const char* msj) {
 	if (_id != -1)
-		sprintf(_buffer, "%s-%i : %s\n", _identificador.c_str(), _id, msj);
+		sprintf(_buffer, "*****************************%s-%i : %s\n", _identificador.c_str(), _id, msj);
 	else
-		sprintf(_buffer, "%s : %s\n", _identificador.c_str(), msj);
+		sprintf(_buffer, "*****************************%s : %s\n", _identificador.c_str(), msj);
 
-	imprimirError();
+	//imprimirError();
+	perror(_buffer);
+	exit(1);
 }
 
 void SalidaPorPantalla::error(const std::string& msj) {

@@ -20,3 +20,5 @@ ADD_EXECUTABLE(robotFrec mainRobotFrec.cpp ${dependencias} ${comunes})
 ADD_EXECUTABLE(robotArmar mainRobotArmar.cpp ${dependencias} ${comunes})
 
 ADD_EXECUTABLE(comp mainComponente.cpp ${dependencias} ${comunes})
+
+ADD_EXECUTABLE(activ mainActivador.cpp ${dependencias} ${comunes})

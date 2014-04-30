@@ -134,7 +134,7 @@ void Plataforma::inicializar() {
 	for (int i = 0; i < _cantRobots ; i++) {
 		_posRobotActual = i;
 		estadoRobotArmar(EstRobotArmar::OCUPADO);
-		estadoRobotFrec(EstRobotFrec::OCUPADO);
+		estadoRobotFrec(EstRobotFrec::ESPERANDO);
 	}
 
 	_posRobotActual = aux;
@@ -151,7 +151,7 @@ void Plataforma::inicializar() {
 
 	// inicializacion de semaforos
 
-	_semsArmar->inicializar(0);
+	_semsArmar->inicializar(1);
 	_semsFrec->inicializar(0);
 
 	_mutex->inicializar(1);
@@ -266,6 +266,8 @@ bool Plataforma::reservarLugar() {
 			reservado = true;
 			colocarEnLugar(i, lugar);
 		}
+
+		++i;
 	}
 
 	return reservado;
@@ -326,9 +328,12 @@ bool Plataforma::seguirTrabajando() {
 }
 
 bool Plataforma::detectarFrecuencia() {
-	bool detectada = false;
+
+	waitRobotFrec();
 
 	waitMutex();
+
+	estadoRobotFrec(EstRobotFrec::OCUPADO);
 
 	EstRobotArmar::EstadoRobotArmar est = estadoRobotArmar();
 
@@ -337,64 +342,118 @@ bool Plataforma::detectarFrecuencia() {
 		signalMutex();
 		waitRobotFrec();
 
+		// se despierta
 		waitMutex();
+		estadoRobotFrec(EstRobotFrec::OCUPADO);
 	}
-//	else {
-//		signalMutex();
-//	}
 
-	detectada = hayDispositivosActivos();
 
-	if (detectada == false) {
+	bool activos = hayDispositivosActivos();
+
+	if (activos) {
+		signalMutex();
+	}
+	else {
 		estadoRobotFrec(EstRobotFrec::ESPERANDO);
 		signalMutex();
 
 		signalRobotArmar();
-
 		waitRobotFrec();
-	}
-	else {
+
+		// se despierta
+		waitMutex();
+		estadoRobotFrec(EstRobotFrec::OCUPADO);
 		signalMutex();
 	}
 
-	return detectada;
+
+	return activos;
+
+
+	// Metodo Viejo
+//	bool detectada = false;
+//
+//	waitMutex();
+//
+//	EstRobotArmar::EstadoRobotArmar est = estadoRobotArmar();
+//
+//	if (est == EstRobotArmar::ARMANDO || est == EstRobotArmar::OCUPADO) {
+//		estadoRobotFrec(EstRobotFrec::ESPERANDO);
+//		signalMutex();
+//		waitRobotFrec();
+//
+//		waitMutex();
+//	}
+////	else {
+////		signalMutex();
+////	}
+//
+//	detectada = hayDispositivosActivos();
+//
+//	if (detectada == false) {
+//		estadoRobotFrec(EstRobotFrec::ESPERANDO);
+//		signalMutex();
+//
+//		signalRobotArmar();
+//
+//		waitRobotFrec();
+//	}
+//	else {
+//		signalMutex();
+//	}
+//
+//	return detectada;
 }
 
 bool Plataforma::sacarDispositivo(int& numDispositivo) {
 	waitMutex();
 
-	EstRobotArmar::EstadoRobotArmar est = estadoRobotArmar();
+	bool sacado = primSacarDispositivo(numDispositivo);
 
-	if (est == EstRobotArmar::ARMANDO) {
-		estadoRobotFrec(EstRobotFrec::ESPERANDO);
-		signalMutex();
+	estadoRobotFrec(EstRobotFrec::ESPERANDO);
 
-		signalRobotArmar();
+	signalRobotArmar();
 
-		waitRobotFrec();
-
-		waitMutex();
-		estadoRobotFrec(EstRobotFrec::OCUPADO);
-	}
-
-	bool sacado = sacarDispositivo(numDispositivo);
-
-	// si no se saco dispositivo
-	if ( sacado == false) {
-		estadoRobotFrec(EstRobotFrec::ESPERANDO);
-		signalMutex();
-		signalRobotArmar();
-
-		waitRobotFrec();
-
-		waitMutex();
-		estadoRobotFrec(EstRobotFrec::OCUPADO);
-	}
-	else {
-		signalMutex();
-	}
+	signalMutex();
 
 	return sacado;
+
+
+// Metodo Viejo
+//	waitMutex();
+//
+//	EstRobotArmar::EstadoRobotArmar est = estadoRobotArmar();
+//
+//	if (est == EstRobotArmar::ARMANDO) {
+//		estadoRobotFrec(EstRobotFrec::ESPERANDO);
+//		signalMutex();
+//
+//		signalRobotArmar();
+//
+//		waitRobotFrec();
+//
+//		waitMutex();
+//		estadoRobotFrec(EstRobotFrec::OCUPADO);
+//	}
+//
+//	bool sacado = sacarDispositivo(numDispositivo);
+//
+//	// si no se saco dispositivo
+//	if ( sacado == false) {
+//		estadoRobotFrec(EstRobotFrec::ESPERANDO);
+//		signalMutex();
+//		signalRobotArmar();
+//
+//		waitRobotFrec();
+//
+//		waitMutex();
+//		estadoRobotFrec(EstRobotFrec::OCUPADO);
+//	}
+//	else {
+//		signalMutex();
+//	}
+//
+//	return sacado;
 }
 
 
@@ -406,9 +465,11 @@ bool Plataforma::sacarDispositivo(int& numDispositivo) {
  */
 
 bool Plataforma::plataformaLlena() {
+	waitRobotArmar();
+
 	waitMutex();
 
-	mostrarVariables();
+	estadoRobotArmar(EstRobotArmar::OCUPADO);
 
 	EstRobotFrec::EstadoRobotFrec est = estadoRobotFrec();
 
@@ -416,23 +477,69 @@ bool Plataforma::plataformaLlena() {
 		estadoRobotArmar(EstRobotArmar::ESPERANDO);
 		signalMutex();
 
-		signalRobotFrec();
-
 		waitRobotArmar();
+
+		// se desperto
 		waitMutex();
+		estadoRobotArmar(EstRobotArmar::OCUPADO);
 	}
 
-	estadoRobotArmar(EstRobotArmar::OCUPADO);
+	bool llena;
 
-	bool llena = (lugaresLibres() == 0);
+	do {
 
-	if (llena == false) {
-		if (reservarLugar()) {
-			estadoRobotArmar(EstRobotArmar::ARMANDO);
+		llena = (this->lugaresLibres() == 0);
+
+		if (llena == false) {
+			reservarLugar();
+			signalMutex();
 		}
-	}
+		else {
+			estadoRobotArmar(EstRobotArmar::ESPERANDO);
+			signalMutex();
 
-	signalMutex();
+			signalRobotFrec();
+
+			waitRobotArmar();
+
+			// se desperto
+			waitMutex();
+		}
+
+	}
+	while (llena);
+
+	return llena;
+
+//	waitMutex();
+//
+//	mostrarVariables();
+//
+//	EstRobotFrec::EstadoRobotFrec est = estadoRobotFrec();
+//
+//	if (est == EstRobotFrec::OCUPADO) {
+//		estadoRobotArmar(EstRobotArmar::ESPERANDO);
+//		signalMutex();
+//
+//		signalRobotFrec();
+//
+//		waitRobotArmar();
+//		waitMutex();
+//	}
+//
+//	estadoRobotArmar(EstRobotArmar::OCUPADO);
+//
+//	bool llena = (lugaresLibres() == 0);
+//
+//	if (llena == false) {
+//		if (reservarLugar()) {
+//			estadoRobotArmar(EstRobotArmar::ARMANDO);
+//		}
+//	}
+//
+//	signalMutex();
+//
+//	return llena;
 }
 
 void Plataforma::esperar() {
@@ -451,19 +558,62 @@ void Plataforma::esperar() {
 bool Plataforma::colocarDispositivo(int numDispositivo) {
 	waitMutex();
 
-	bool colocado;
-
-	colocado = primColocarDispositivo(numDispositivo);
+	bool colocado = primColocarDispositivo(numDispositivo);
 
 	estadoRobotArmar(EstRobotArmar::ESPERANDO);
 
-	signalMutex();
-
 	signalRobotFrec();
 
-	waitRobotArmar();
+	signalMutex();
+
 
 	return colocado;
+// Metodo Viejo
+
+//	waitMutex();
+//
+//	bool colocado;
+//
+//	colocado = primColocarDispositivo(numDispositivo);
+//
+//	estadoRobotArmar(EstRobotArmar::ESPERANDO);
+//
+//	signalMutex();
+//
+//	signalRobotFrec();
+//
+//	waitRobotArmar();
+//
+//	return colocado;
+}
+
+bool Plataforma::activarDispositivo(int posicion) {
+	if (posicion >= _capacidad)
+		return false;
+
+	LugarPlataforma lugar;
+
+	waitMutex();
+
+	verLugar(posicion, lugar);
+	bool activado = false;
+
+	if (lugar.lugar == EstadoLugarPlataforma::OCUPADO) {
+		lugar.lugar = EstadoLugarPlataforma::ENCENDIDO;
+
+		this->colocarEnLugar(posicion, lugar);
+		activado = true;
+
+		_salida->mostrar("Activado dispositivo en la posicion ", posicion);
+	}
+
+	signalMutex();
+
+	return activado;
+}
+
+int Plataforma::capacidad() {
+	return _capacidad;
 }
 
 

@@ -98,7 +98,7 @@ int main(int argc,char** argv) {
 			}
 
 			// colocando
-			sleep(TIEMPO_TRABAJO);
+			usleep(TIEMPO_TRABAJO);
 		}
 	}
 

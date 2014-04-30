@@ -255,6 +255,15 @@ void correr() {
 		ss.str("");
 	}
 
+
+	pid = fork();
+
+	if (pid == 0) {
+		execl("./activ", "Activador", NULL);
+		perror("Error no se pudo iniciar proceso activador");
+		exit(2);
+	}
+
 	SalidaPorPantalla::instancia().mostrar("Lanzados todos los Procesos Robots.");
 }
 
