@@ -39,12 +39,13 @@ void PlataformaVirtual::iniciarComponente() {
 	std::stringstream ss;
 
 	ss << _numRobot;
-	char* arg = NULL;
+	const char *ptra= "A", *ptrf = "F";
+	const char* arg;
 
 	if (_modo == MdRobot::ARMADOR)
-		arg = "A";
+		arg = ptra;
 	else
-		arg = "F";
+		arg = ptrf;
 
 
 	int pid = fork();
@@ -57,6 +58,10 @@ void PlataformaVirtual::iniciarComponente() {
 }
 
 PlataformaVirtual::~PlataformaVirtual() {
+	if (_modo == MdRobot::ARMADOR) {
+		prepararMsj(MtdPlataforma::ARMADOR_FINALIZO);
+		_cola.enviar(_msj);
+	}
 }
 
 bool PlataformaVirtual::detectarFrecuencia() {

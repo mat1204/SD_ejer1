@@ -9,6 +9,7 @@
 #include "ArchConfiguracion.h"
 #include "../../comun/SalidaPorPantalla.h"
 #include <stdlib.h>
+#include <iostream>
 
 /**
  *
@@ -104,9 +105,10 @@ EstRobotArmar::EstadoRobotArmar Plataforma::estadoRobotArmar() {
 void Plataforma::estadoRobotArmar(EstRobotArmar::EstadoRobotArmar estado) {
 	int posicion = _posEstArmar + _posRobotActual * sizeof(estado);
 	_memoriaLugares->escribir(posicion, (void*) &estado, sizeof(estado));
+
 	if (estado == EstRobotArmar::FINALIZADO) {
 		armadoresFinalizados(1);
-		SalidaPorPantalla::instancia().mostrar("Armador Finalizao");
+		SalidaPorPantalla::instancia().mostrar("Armador Finalizado");
 	}
 }
 
@@ -205,16 +207,22 @@ bool Plataforma::primSacarDispositivo(int& numDisp) {
 	int i = 0;
 
 	LugarPlataforma lugar;
-	int tamLugar = sizeof(lugar);
 
 	while (!encontrado && i < _capacidad) {
-		_memoriaLugares->leer(i, (void*) &lugar, tamLugar);
+
+		verLugar(i, lugar);
+
 		if (lugar.lugar == EstadoLugarPlataforma::ENCENDIDO) {
 			encontrado = true;
 			numDisp = lugar.numDispositivo;
+
+			lugar.lugar = EstadoLugarPlataforma::VACIO;
 			lugar.numDispositivo = 0;
 
+			colocarEnLugar(i, lugar);
+
 			lugaresOcupados(-1);
+			lugaresActivados(-1);
 			lugaresLibres(1);
 		}
 		++i;
@@ -225,24 +233,26 @@ bool Plataforma::primSacarDispositivo(int& numDisp) {
 
 bool Plataforma::primColocarDispositivo(int numDispotivo) {
 	bool colocado = false;
-	int i = 0;
+
 
 	LugarPlataforma lugar;
 	int tamLugar = sizeof(lugar);
 
+
+	int i = 0;
 	while (!colocado && i < _capacidad) {
-		_memoriaLugares->leer(i, (void*) &lugar, tamLugar);
+		//_memoriaLugares->leer(i, (void*) &lugar, tamLugar);
+		verLugar(i , lugar);
 
 		if (lugar.lugar == EstadoLugarPlataforma::RESERVADO) {
 			colocado = true;
 
 			lugar.lugar = EstadoLugarPlataforma::OCUPADO;
 			lugar.numDispositivo = numDispotivo;
-			_memoriaLugares->escribir(i, (void*) &lugar, tamLugar);
+			//_memoriaLugares->escribir(i, (void*) &lugar, tamLugar);
+			colocarEnLugar(i, lugar);
 
 			lugaresOcupados(1);
-			lugaresLibres(-1);
-
 		}
 
 		++i;
@@ -265,6 +275,8 @@ bool Plataforma::reservarLugar() {
 			lugar.lugar = EstadoLugarPlataforma::RESERVADO;
 			reservado = true;
 			colocarEnLugar(i, lugar);
+
+			lugaresLibres(-1);
 		}
 
 		++i;
@@ -329,17 +341,37 @@ bool Plataforma::seguirTrabajando() {
 
 bool Plataforma::detectarFrecuencia() {
 
-	waitRobotFrec();
-
 	waitMutex();
+	EstRobotFrec::EstadoRobotFrec estActual = estadoRobotFrec();
+
+	EstRobotArmar::EstadoRobotArmar estArmador = estadoRobotArmar();
+
+
+	/**
+	 * Condicion necesario por si plataforma esta llena, quiere decir que se quedo ocupado,
+	 * no paso el turno al robot de armar y ademas hasta este punto no habia ningun
+	 * dispositivo encendido. Pero se salta la condicion y sigue trabajando si el armador
+	 * ha finalizado.
+	 */
+	if (estActual == EstRobotFrec::ESPERANDO && estArmador != EstRobotArmar::FINALIZADO) {
+		signalMutex();
+
+		SalidaPorPantalla::instancia().mostrar("Esperando turno (al inicio)");
+		waitRobotFrec();
+
+		waitMutex();
+	}
+
+	//waitMutex();
 
 	estadoRobotFrec(EstRobotFrec::OCUPADO);
 
-	EstRobotArmar::EstadoRobotArmar est = estadoRobotArmar();
+	estArmador = estadoRobotArmar();
 
-	if (est == EstRobotArmar::ARMANDO || est == EstRobotArmar::OCUPADO) {
+	if (estArmador == EstRobotArmar::ARMANDO || estArmador == EstRobotArmar::OCUPADO) {
 		estadoRobotFrec(EstRobotFrec::ESPERANDO);
 		signalMutex();
+		SalidaPorPantalla::instancia().mostrar("Armador ocupado");
 		waitRobotFrec();
 
 		// se despierta
@@ -350,18 +382,28 @@ bool Plataforma::detectarFrecuencia() {
 
 	bool activos = hayDispositivosActivos();
 
+	bool plataformaLlena = (lugaresLibres() == 0);
+
 	if (activos) {
+		SalidaPorPantalla::instancia().mostrar("HAY dispositivos activos");
 		signalMutex();
 	}
-	else {
+	else if (plataformaLlena == false) {
 		estadoRobotFrec(EstRobotFrec::ESPERANDO);
 		signalMutex();
 
-		signalRobotArmar();
-		waitRobotFrec();
+		SalidaPorPantalla::instancia().mostrar("NO hay dispositivos activos");
 
-		// se despierta
-		waitMutex();
+
+		/*
+		 * Si el armador no finalizo le paso el turno
+		 */
+		if (estArmador != EstRobotArmar::FINALIZADO)
+			signalRobotArmar();
+
+	}
+	else {
+		SalidaPorPantalla::instancia().mostrar("Plataforma llena y NO hay dispositivos activos");
 		estadoRobotFrec(EstRobotFrec::OCUPADO);
 		signalMutex();
 	}
@@ -369,40 +411,6 @@ bool Plataforma::detectarFrecuencia() {
 
 	return activos;
 
-
-	// Metodo Viejo
-//	bool detectada = false;
-//
-//	waitMutex();
-//
-//	EstRobotArmar::EstadoRobotArmar est = estadoRobotArmar();
-//
-//	if (est == EstRobotArmar::ARMANDO || est == EstRobotArmar::OCUPADO) {
-//		estadoRobotFrec(EstRobotFrec::ESPERANDO);
-//		signalMutex();
-//		waitRobotFrec();
-//
-//		waitMutex();
-//	}
-////	else {
-////		signalMutex();
-////	}
-//
-//	detectada = hayDispositivosActivos();
-//
-//	if (detectada == false) {
-//		estadoRobotFrec(EstRobotFrec::ESPERANDO);
-//		signalMutex();
-//
-//		signalRobotArmar();
-//
-//		waitRobotFrec();
-//	}
-//	else {
-//		signalMutex();
-//	}
-//
-//	return detectada;
 }
 
 bool Plataforma::sacarDispositivo(int& numDispositivo) {
@@ -417,45 +425,7 @@ bool Plataforma::sacarDispositivo(int& numDispositivo) {
 	signalMutex();
 
 	return sacado;
-
-
-// Metodo Viejo
-//	waitMutex();
-//
-//	EstRobotArmar::EstadoRobotArmar est = estadoRobotArmar();
-//
-//	if (est == EstRobotArmar::ARMANDO) {
-//		estadoRobotFrec(EstRobotFrec::ESPERANDO);
-//		signalMutex();
-//
-//		signalRobotArmar();
-//
-//		waitRobotFrec();
-//
-//		waitMutex();
-//		estadoRobotFrec(EstRobotFrec::OCUPADO);
-//	}
-//
-//	bool sacado = sacarDispositivo(numDispositivo);
-//
-//	// si no se saco dispositivo
-//	if ( sacado == false) {
-//		estadoRobotFrec(EstRobotFrec::ESPERANDO);
-//		signalMutex();
-//		signalRobotArmar();
-//
-//		waitRobotFrec();
-//
-//		waitMutex();
-//		estadoRobotFrec(EstRobotFrec::OCUPADO);
-//	}
-//	else {
-//		signalMutex();
-//	}
-//
-//	return sacado;
 }
-
 
 
 /**
@@ -465,6 +435,7 @@ bool Plataforma::sacarDispositivo(int& numDispositivo) {
  */
 
 bool Plataforma::plataformaLlena() {
+	SalidaPorPantalla::instancia().mostrar("Esperando turno (al inicio)");
 	waitRobotArmar();
 
 	waitMutex();
@@ -477,6 +448,7 @@ bool Plataforma::plataformaLlena() {
 		estadoRobotArmar(EstRobotArmar::ESPERANDO);
 		signalMutex();
 
+		SalidaPorPantalla::instancia().mostrar("Robot Frecuencia Ocupado");
 		waitRobotArmar();
 
 		// se desperto
@@ -498,48 +470,19 @@ bool Plataforma::plataformaLlena() {
 			estadoRobotArmar(EstRobotArmar::ESPERANDO);
 			signalMutex();
 
+			SalidaPorPantalla::instancia().mostrar("Plataforma llena, pasando a frec");
 			signalRobotFrec();
-
 			waitRobotArmar();
 
 			// se desperto
 			waitMutex();
+			estadoRobotArmar(EstRobotArmar::OCUPADO);
 		}
 
 	}
 	while (llena);
 
 	return llena;
-
-//	waitMutex();
-//
-//	mostrarVariables();
-//
-//	EstRobotFrec::EstadoRobotFrec est = estadoRobotFrec();
-//
-//	if (est == EstRobotFrec::OCUPADO) {
-//		estadoRobotArmar(EstRobotArmar::ESPERANDO);
-//		signalMutex();
-//
-//		signalRobotFrec();
-//
-//		waitRobotArmar();
-//		waitMutex();
-//	}
-//
-//	estadoRobotArmar(EstRobotArmar::OCUPADO);
-//
-//	bool llena = (lugaresLibres() == 0);
-//
-//	if (llena == false) {
-//		if (reservarLugar()) {
-//			estadoRobotArmar(EstRobotArmar::ARMANDO);
-//		}
-//	}
-//
-//	signalMutex();
-//
-//	return llena;
 }
 
 void Plataforma::esperar() {
@@ -566,25 +509,7 @@ bool Plataforma::colocarDispositivo(int numDispositivo) {
 
 	signalMutex();
 
-
 	return colocado;
-// Metodo Viejo
-
-//	waitMutex();
-//
-//	bool colocado;
-//
-//	colocado = primColocarDispositivo(numDispositivo);
-//
-//	estadoRobotArmar(EstRobotArmar::ESPERANDO);
-//
-//	signalMutex();
-//
-//	signalRobotFrec();
-//
-//	waitRobotArmar();
-//
-//	return colocado;
 }
 
 bool Plataforma::activarDispositivo(int posicion) {
@@ -604,6 +529,8 @@ bool Plataforma::activarDispositivo(int posicion) {
 		this->colocarEnLugar(posicion, lugar);
 		activado = true;
 
+		lugaresActivados(1);
+
 		_salida->mostrar("Activado dispositivo en la posicion ", posicion);
 	}
 
@@ -616,4 +543,108 @@ int Plataforma::capacidad() {
 	return _capacidad;
 }
 
+void Plataforma::mostrarLugares() {
+	waitMutex();
 
+	LugarPlataforma lugar;
+
+	std::cout << "Libres: " << lugaresLibres() << std::endl;
+	std::cout << "Ocupados: " << lugaresOcupados() << std::endl;
+	std::cout << "Activados: " << lugaresActivados() << std::endl;
+	std::cout << "Armadores finalizados: " << armadoresFinalizados() << std::endl;
+	std::cout << std::endl;
+
+
+	for ( int i = 0; i < _capacidad ; ++i ) {
+		std::cout << i << " - ";
+
+		verLugar(i, lugar);
+
+		switch (lugar.lugar) {
+			case EstadoLugarPlataforma::ENCENDIDO:
+				std::cout << "(+) ; ENCENDIDO";	 break;
+
+			case EstadoLugarPlataforma::OCUPADO:
+				std::cout << "(0) ; OCUPADO";	 break;
+
+			case EstadoLugarPlataforma::RESERVADO:
+				std::cout << "(R) ; RESERVADO";	 break;
+
+			case EstadoLugarPlataforma::VACIO:
+				std::cout << "( ) ; VACIO";	 break;
+
+			default:
+				signalMutex();
+				std::cout << "??INVALIDO"; break;
+		}
+		std::cout << std::endl;
+	}
+
+	signalMutex();
+}
+
+void Plataforma::mostrarRobots() {
+	waitMutex();
+
+	EstRobotArmar::EstadoRobotArmar estA;
+	EstRobotFrec::EstadoRobotFrec estF;
+
+	int aux = _posRobotActual;
+
+	for ( int i = 0; i < _cantRobots ; ++i) {
+		_posRobotActual = i;
+
+		estA = estadoRobotArmar();
+		estF = estadoRobotFrec();
+
+		std::cout << "Robot-" << i << " ";
+
+
+		std::cout << "Armador: ";
+
+		switch (estA) {
+			case EstRobotArmar::ARMANDO:
+				std::cout << "ARMANDO";	break;
+			case EstRobotArmar::ESPERANDO:
+				std::cout << "ESPERANDO"; 	break;
+
+			case EstRobotArmar::FINALIZADO:
+				std::cout << "**FINALIZADO**"; 	break;
+
+			case EstRobotArmar::OCUPADO:
+				std::cout << "OCUPADO"; 	break;
+
+			default:
+				std::cout << "??INVALIDO";	break;
+		}
+
+		std::cout << ";\t Frecuencia: ";
+
+		switch (estF) {
+			case EstRobotFrec::ESPERANDO:
+				std::cout << "ESPERANDO"; break;
+
+			case EstRobotFrec::FINALIZADO:
+				std::cout << "**FINALIZADO**"; break;
+
+			case EstRobotFrec::OCUPADO:
+				std::cout << "OCUPADO"; break;
+
+			default:
+				std::cout << "??INVALIDO";	break;
+		}
+
+
+		std::cout << std::endl;
+	}
+
+	_posRobotActual = aux;
+	signalMutex();
+}
+
+
+void Plataforma::finDeArmador() {
+	waitMutex();
+	estadoRobotArmar(EstRobotArmar::FINALIZADO);
+	signalMutex();
+}

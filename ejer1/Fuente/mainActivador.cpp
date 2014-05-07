@@ -21,11 +21,15 @@ int main(int argc, char** argv) {
 	int capacidad = plat.capacidad();
 
 	int posicion;
-	for (;;) {
 
-		usleep(100*TIEMPO_TRABAJO);
+
+	for (int i = 0; i < 100 ; ++i) {
+
+		usleep(TIEMPO_TRABAJO);
 
 		posicion = posicionRandom(capacidad);
+
+		SalidaPorPantalla::instancia().mostrar("intentando activar dispositivo en posicion ", posicion);
 
 		plat.activarDispositivo(posicion);
 	}

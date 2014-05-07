@@ -41,6 +41,10 @@ void limpiar();
 
 void mostrarConfiguracion();
 
+void visor();
+
+void lanzarVisor();
+
 void testConfiguracion() {
 	int p1=23, p2 = 2 ,p3=284455 , p4 = 34568291;
 
@@ -120,6 +124,7 @@ int main(int argc, char** argv) {
 	}
 	else if (strcmp(argv[1] , "-i") == 0 ) {
 		inicializar();
+		lanzarVisor();
 		correr();
 	}
 	else if ( strcmp(argv[1] , "-t") == 0 ) {
@@ -128,8 +133,17 @@ int main(int argc, char** argv) {
 	else if ( strcmp(argv[1], "-m") == 0 ) {
 		mostrarConfiguracion();
 	}
+	else if ( strcmp(argv[1], "-v") == 0 ) {
+			visor();
+	}
 
 	return 0;
+}
+
+void lanzarVisor() {
+	system("xterm -e watch -n1 \"./lanzador -v\" &");
+
+	usleep(TIEMPO_TRABAJO);
 }
 
 void mostrarConfiguracion() {
@@ -281,5 +295,31 @@ void limpiar() {
 	cmd = "rm ";
 	cmd += RUTA_ARCH_SEMAFOROS;
 	system(cmd.c_str());
+
+}
+
+void visor() {
+	Plataforma plat;
+	ArchConfiguracion config;
+
+	int capacidad, cantRobots;
+
+	{
+		config.leer(ET_CANT_ROBOTS, cantRobots);
+		config.leer(ET_CAPCIDAD_PLAT, capacidad);
+	}
+
+	std::cout << "Capacidad: " << capacidad << std::endl;
+	std::cout << "Cantidad de Robots: " << cantRobots << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Lugares: " << std::endl;
+
+	plat.mostrarLugares();
+
+
+	std::cout << std::endl << "Robots: " << std::endl;
+	plat.mostrarRobots();
+
 
 }

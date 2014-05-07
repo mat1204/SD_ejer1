@@ -28,7 +28,7 @@ void GestorArch::crearArchivo(const char* ruta) {
 	}
 }
 
-void GestorArch::destruiArchivo(const char* ruta) {
+void GestorArch::destruirArchivo(const char* ruta) {
 	std::string cmd("rm ");
 	cmd += ruta;
 

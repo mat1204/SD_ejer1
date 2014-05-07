@@ -21,7 +21,6 @@ SalidaPorPantalla::SalidaPorPantalla() : _identificador("SIN-ETIQUETA"), _id(-1)
 }
 
 SalidaPorPantalla::~SalidaPorPantalla() {
-
 	mostrar("PROCESO FINALIZADO");
 }
 
@@ -38,6 +37,7 @@ void SalidaPorPantalla::mostrar(const char* mensaje) {
 	else
 		sprintf(_buffer, "%s : %s\n", _identificador.c_str(), mensaje);
 	imprimir();
+	sleep(2);
 }
 
 void SalidaPorPantalla::mostrar(const std::string& mensaje) {
@@ -52,7 +52,7 @@ void SalidaPorPantalla::error(const char* msj) {
 
 	//imprimirError();
 	perror(_buffer);
-	exit(1);
+	//exit(1);
 }
 
 void SalidaPorPantalla::error(const std::string& msj) {

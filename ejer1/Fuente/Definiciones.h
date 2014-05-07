@@ -8,11 +8,9 @@
 #ifndef DEFINICIONES_H_
 #define DEFINICIONES_H_
 
-/************************************************************************************/
-/**
- *  Macro utilizadda para cambiar entorno de compilacion
- */
-#define COMP_UBUNTU
+#include "../../comun/macros.h"
+#include "../../comun/SalidaPorPantalla.h"
+
 
 /************************************************************************************/
 namespace MdRobot {
@@ -50,6 +48,8 @@ namespace MtdPlataforma {
 		ESTADO_ROBOT_ARMAR,
 		ROBOT_ARMAR,
 		ROBOTS_FINALIZADOS,
+
+		ARMADOR_FINALIZO,
 
 		// Nuevos
 
@@ -152,6 +152,6 @@ typedef struct {
 #define ET_PILAS_ROBOT		"PILAS_ROBOT_"
 
 
-#define TIEMPO_TRABAJO    10000
+#define TIEMPO_TRABAJO    10000000
 
 #endif /* DEFINICIONES_H_ */

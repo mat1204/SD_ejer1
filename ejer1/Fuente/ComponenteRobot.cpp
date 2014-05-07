@@ -54,7 +54,6 @@ int ComponenteRobot::iniciarParaArmado() {
 	while(_seguirTrabajando) {
 		esperarMsj();
 
-		salida->mostrar("Se recibio mensaje de robot-", _ultimoMsj.numRobot);
 
 		MtdPlataforma::MetodoPlataforma metodo = _ultimoMsj.metodo;
 
@@ -62,6 +61,8 @@ int ComponenteRobot::iniciarParaArmado() {
 			case MtdPlataforma::PLATAFORMA_LLENA: procPlataformaLlena(); break;
 			case MtdPlataforma::ESPERAR: procEsperar(); break;
 			case MtdPlataforma::COLOCAR_DISP: procColocarDispositivo(); break;
+			case MtdPlataforma::ARMADOR_FINALIZO: procFinDeArmador(); break;
+
 			default:salida->error("Metodo de Plataforma no reconocido."); break;
 		}
 
@@ -102,7 +103,7 @@ void ComponenteRobot::enviarRespuesta() {
 
 
 void ComponenteRobot::procDetectarFrecuencia() {
-	SalidaPorPantalla::instancia().mostrar("llamando proceso DetectarFrecuencia()");
+	//SalidaPorPantalla::instancia().mostrar("llamando proceso DetectarFrecuencia()");
 
 	_respuesta.resultado.booleano = _plataforma.detectarFrecuencia();
 
@@ -110,7 +111,7 @@ void ComponenteRobot::procDetectarFrecuencia() {
 		SalidaPorPantalla::instancia().mostrar("Frecuencia detectada");
 	}
 	else {
-		SalidaPorPantalla::instancia().mostrar("Frecuencia detectada");
+		SalidaPorPantalla::instancia().mostrar("Frecuencia NO detectada");
 	}
 
 }
@@ -134,7 +135,7 @@ void ComponenteRobot::procSacarDispositivo() {
 
 void ComponenteRobot::procPlataformaLlena(){
 
-	SalidaPorPantalla::instancia().mostrar("llamando proceso PlataformaLlena()");
+	//SalidaPorPantalla::instancia().mostrar("llamando proceso PlataformaLlena()");
 
 	_respuesta.resultado.booleano = _plataforma.plataformaLlena();
 
@@ -151,8 +152,19 @@ void ComponenteRobot::procEsperar() {
 }
 
 void ComponenteRobot::procColocarDispositivo() {
-	SalidaPorPantalla::instancia().mostrar("llamando proceso ColocarDispositivo()");
+	//SalidaPorPantalla::instancia().mostrar("llamando proceso ColocarDispositivo()");
 
 	_respuesta.resultado.booleano = _plataforma.colocarDispositivo(_ultimoMsj.numDispositivo);
 	_respuesta.numDispositivo = _ultimoMsj.numDispositivo;
+	if (_respuesta.resultado.booleano)
+		SalidaPorPantalla::instancia().mostrar("Dispositivo Colocado n°", _respuesta.numDispositivo);
+	else
+		SalidaPorPantalla::instancia().mostrar("Dispositivo NO Colocado");
+}
+
+void ComponenteRobot::procFinDeArmador() {
+	_plataforma.finDeArmador();
+	_respuesta.resultado.booleano = true;
+
+	_seguirTrabajando = false;
 }

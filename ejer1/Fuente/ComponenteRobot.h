@@ -43,6 +43,7 @@ private:
 	void procPlataformaLlena();
 	void procEsperar();
 	void procColocarDispositivo();
+	void procFinDeArmador();
 
 	bool _seguirTrabajando;
 

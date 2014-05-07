@@ -81,10 +81,7 @@ int main(int argc,char** argv) {
 	while (pilas > 1 && disp > 0) {
 
 
-		if (plataforma->plataformaLlena()) {
-			plataforma->esperar();
-		}
-		else {
+		if (plataforma->plataformaLlena() == false) {
 			pilas -= 2;
 			disp--;
 
@@ -95,11 +92,15 @@ int main(int argc,char** argv) {
 				salida->agregarAlMsj("Se coloco dispositivo n°");
 				salida->agregarAlMsj(numDispositivo);
 				salida->mostrarMsj();
+
+				++numDispositivo;
 			}
 
 			// colocando
 			usleep(TIEMPO_TRABAJO);
 		}
+
+
 	}
 
 	return 0;

@@ -54,6 +54,9 @@ int main(int argc,char** argv) {
 	int numDispSacado;
 
 	while ( plataforma->seguirTrabajando() ) {
+
+		usleep(TIEMPO_TRABAJO);
+
 		if ( plataforma->detectarFrecuencia() ) {
 
 			usleep(TIEMPO_TRABAJO);

@@ -43,11 +43,19 @@ public:
 
 	bool colocarDispositivo(int numDispositivo);
 
+	void finDeArmador();
+
+
 	void inicializar();
 
 	void destruir();
 
 	int capacidad();
+
+
+	void mostrarLugares();
+
+	void mostrarRobots();
 
 	virtual ~Plataforma();
 private:
@@ -61,8 +69,11 @@ private:
 	void estadoRobotFrec(EstRobotFrec::EstadoRobotFrec estado);
 
 	//
-	void waitMutex()		{ _salida->mostrar("(MUTEX) wait");_mutex->wait(0); }
-	void signalMutex()	{ _salida->mostrar("(MUTEX) signal");_mutex->signal(0); }
+	void waitMutex()		{ //_salida->mostrar("(MUTEX) wait");
+								_mutex->wait(0); }
+
+	void signalMutex()	{ //_salida->mostrar("(MUTEX) signal");
+								_mutex->signal(0); }
 
 	void waitRobotFrec() 		{ _salida->mostrar("(SEMAFORO) Esperando por turno, robot n°", _posRobotActual); _semsFrec->wait(_posRobotActual); 	}
 	void signalRobotFrec() 	{ _salida->mostrar("(SEMAFORO) Paso turno a Robot Frecuencia n°", _posRobotActual); _semsFrec->signal(_posRobotActual); 	}

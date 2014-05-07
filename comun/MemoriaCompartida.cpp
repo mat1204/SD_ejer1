@@ -72,6 +72,7 @@ void MemoriaCompartida::escribir(int posicion, void* dato, int tamDato) {
 
 void MemoriaCompartida::destruir() {
 	if (_memoria != NULL) {
+		shmdt((void*)_memoria);
 		if (shmctl(_idMemoria, IPC_RMID, NULL) == -1) {
 			_salida->error("No se pudo eliminar el segmento de MemCompartida");
 		}

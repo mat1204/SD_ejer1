@@ -14,7 +14,7 @@ public:
 
 	void crearArchivo(const char* ruta);
 
-	void destruiArchivo(const char* ruta);
+	void destruirArchivo(const char* ruta);
 
 	virtual ~GestorArch();
 };
