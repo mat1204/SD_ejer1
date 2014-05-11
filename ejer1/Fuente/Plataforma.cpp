@@ -493,6 +493,11 @@ bool Plataforma::plataformaLlena() {
 }
 
 void Plataforma::esperar() {
+
+	/**
+	 * Metodo Esperar Obsoleto
+	 */
+
 	waitMutex();
 	estadoRobotArmar(EstRobotArmar::ESPERANDO);
 	signalMutex();
