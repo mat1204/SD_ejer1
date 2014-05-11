@@ -38,7 +38,7 @@ int main(int argc,char** argv) {
 	}
 
 	SalidaPorPantalla::instancia().etiqueta("RobotFrec", numRobot);
-
+	SalidaPorPantalla::instancia().color(FUENTE_VERDE);
 
 	//SalidaPorPantalla::instancia().mostrar("Se inicio proceso de RobotFrec.");
 	SalidaPorPantalla::instancia().agregarAlMsj("Se inicio RobotFrec_");
@@ -58,6 +58,8 @@ int main(int argc,char** argv) {
 		usleep(TIEMPO_TRABAJO);
 
 		if ( plataforma->detectarFrecuencia() ) {
+
+			salida->mostrar("Se detecto Frecuencia");
 
 			usleep(TIEMPO_TRABAJO);
 

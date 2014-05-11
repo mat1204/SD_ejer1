@@ -18,9 +18,14 @@ SalidaPorPantalla SalidaPorPantalla::_instancia;
 SalidaPorPantalla::SalidaPorPantalla() : _identificador("SIN-ETIQUETA"), _id(-1) {
 	_filtrar = false;
 	_FILTRO = "PLATAFORMA";
+	_esperaTrasImprimir = true;
+
+	_usarColor = false;
+
 }
 
 SalidaPorPantalla::~SalidaPorPantalla() {
+	_esperaTrasImprimir = false;
 	mostrar("PROCESO FINALIZADO");
 }
 
@@ -32,12 +37,23 @@ void SalidaPorPantalla::mostrar(const char* mensaje) {
 	if (_filtrar && _identificador != _FILTRO)
 		return;
 
-	if (_id != -1)
-		sprintf(_buffer, "%s-%i : %s\n", _identificador.c_str(), _id, mensaje);
-	else
-		sprintf(_buffer, "%s : %s\n", _identificador.c_str(), mensaje);
+
+	if (_usarColor) {
+		if (_id != -1)
+			sprintf(_buffer, "%c[%d;%dm%s-%i : %s %c[%dm\n\n ", 27, 1, _fuenteColor, _identificador.c_str(), _id, mensaje, 27 ,0);
+		else
+			sprintf(_buffer, "%c[%d;%dm%s : %s %c[%dm\n\n", 27, 1, _fuenteColor, _identificador.c_str(), mensaje, 27, 0);
+	}
+	else {
+		if (_id != -1)
+			sprintf(_buffer, "%s-%i : %s\n\n", _identificador.c_str(), _id, mensaje);
+		else
+			sprintf(_buffer, "%s : %s\n\n", _identificador.c_str(), mensaje);
+	}
 	imprimir();
-	sleep(2);
+
+	if (_esperaTrasImprimir)
+		sleep(2);
 }
 
 void SalidaPorPantalla::mostrar(const std::string& mensaje) {
@@ -50,9 +66,7 @@ void SalidaPorPantalla::error(const char* msj) {
 	else
 		sprintf(_buffer, "*****************************%s : %s\n", _identificador.c_str(), msj);
 
-	//imprimirError();
 	perror(_buffer);
-	//exit(1);
 }
 
 void SalidaPorPantalla::error(const std::string& msj) {
@@ -123,4 +137,17 @@ void SalidaPorPantalla::mostrar(const char* msj, const char* msj2) {
 	_ss << msj;
 	_ss << msj2;
 	mostrarMsj();
+}
+
+const std::string SalidaPorPantalla::convertirAString(const float x) {
+	char aux[50];
+	sprintf(aux, "%f", x);
+	std::string res(aux);
+	return res;
+}
+
+void SalidaPorPantalla::color(int colorFuente) {
+	this->_fuenteColor = colorFuente;
+
+	_usarColor = true;
 }

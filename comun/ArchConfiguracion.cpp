@@ -29,6 +29,7 @@ ArchConfiguracion::ArchConfiguracion(bool escritura) : _ruta(NOMBRE_ARCHIVO) {
 		_archivo.open(_ruta.c_str(), std::fstream::in | std::fstream::binary);
 		if (_archivo.is_open() == false) {
 			SalidaPorPantalla::instancia().error("No se pudo abrir archivo de configuracion");
+			exit(EXIT_FAILURE);
 		}
 		else
 			levantar();

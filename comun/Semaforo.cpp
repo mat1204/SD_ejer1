@@ -59,8 +59,10 @@ void Semaforo::inicializar(int val) {
 	valor.val = val;
 
 	for (int i = 0; i < _cant ; i++) {
-		if (semctl(_semId, i, SETVAL, valor ) == -1)
+		if (semctl(_semId, i, SETVAL, valor ) == -1) {
 			_salida->error("error al inicializar semaforos");
+			exit(EXIT_FAILURE);
+		}
 	}
 }
 
@@ -73,11 +75,13 @@ void Semaforo::wait(int numRobot) {
 
 		if (semop( _semId, &op, 1) == -1 ) {
 			_salida->error("Error al intentar operacion wait() en semaforo");
+			exit(EXIT_FAILURE);
 		}
 
 	}
 	else {
 		_salida->error("Error numero de semaforo de robont en wait");
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -90,11 +94,13 @@ void Semaforo::signal(int numRobot) {
 
 		if (semop( _semId, &op, 1) == -1 ) {
 			_salida->error("Error al intentar operacion signal() en semaforo");
+			exit(EXIT_FAILURE);
 		}
 
 	}
 	else {
 		_salida->error("Error numero de semaforo de robont en signal");
+		exit(EXIT_FAILURE);
 	}
 }
 

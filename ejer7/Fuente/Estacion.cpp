@@ -63,3 +63,29 @@ int Estacion::solicitarMateriales() {
 
 	return 10;
 }
+
+
+void Estacion::inicializarEstaciones() {
+
+	Estacion est(-1);
+
+	for (int i = 0 ; i < CANT_ESTACIONES ; ++i) {
+		est._semHayPieza->inicializar(0);
+		est._semPiezaLista->inicializar(0);
+	}
+
+	est._semPiezaLista->inicializar(1);
+}
+
+
+void Estacion::destruirEstaciones() {
+
+	Estacion est(-1);
+
+
+	for (int i = 0 ; i < CANT_ESTACIONES ; ++i) {
+		est._semHayPieza->destruir();
+		est._semPiezaLista->destruir();
+	}
+}
+

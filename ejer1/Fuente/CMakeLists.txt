@@ -1,6 +1,6 @@
 PROJECT(Ejer1)
 set(comun ../../comun)
-set( DCMAKE_BUILD_TYPE Debug)
+set( CMAKE_BUILD_TYPE Debug)
 set( dependencias SemRobots.cpp ColaComponentes.cpp Plataforma.cpp ComponenteRobot.cpp PlataformaVirtual.cpp)
 
 INCLUDE_DIRECTORIES(${comun})

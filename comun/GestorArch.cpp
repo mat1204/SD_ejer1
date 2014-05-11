@@ -25,6 +25,7 @@ GestorArch::~GestorArch() {
 void GestorArch::crearArchivo(const char* ruta) {
 	if (mknod(ruta, 0660, 0) == -1) {
 		SalidaPorPantalla::instancia().error("No se pudo crear archivo con ruta: ", ruta);
+		exit(EXIT_FAILURE);
 	}
 }
 

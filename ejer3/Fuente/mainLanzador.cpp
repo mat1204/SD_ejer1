@@ -94,7 +94,7 @@ void limpiar() {
 	cola.destruir();
 
 	GestorArch g;
-	g.destruiArchivo(RUTA_ARCH_COLA);
+	g.destruirArchivo(RUTA_ARCH_COLA);
 }
 
 int main(int argc, char** argv) {
@@ -102,10 +102,10 @@ int main(int argc, char** argv) {
 	SalidaPorPantalla::instancia().etiqueta("Lanzador");
 
 	if (argc != 2) {
-		SalidaPorPantalla::instancia().etiqueta("arg");
-		SalidaPorPantalla::instancia().mostrar("\t -c configurar");
-		SalidaPorPantalla::instancia().mostrar("\t -i inicializar y correr");
-		SalidaPorPantalla::instancia().mostrar("\t -t limpiar recursos");
+		std::cout << "Se debe ingrear alguno de los siguientes Parametros:" << std::endl;
+		std::cout << " -c configurar" << std::endl;
+		std::cout << " -i inicializar y correr" << std::endl;
+		std::cout << " -t limpiar recursos" << std::endl;
 		exit(EXIT_SUCCESS);
 	}
 
@@ -119,7 +119,6 @@ int main(int argc, char** argv) {
 	else if (strcmp(argv[1], "-t") == 0) {
 		limpiar();
 	}
-
 
 	return 0;
 }

@@ -15,6 +15,7 @@ int posicionRandom(int maximo);
 int main(int argc, char** argv) {
 
 	SalidaPorPantalla::instancia().etiqueta("Activador");
+	SalidaPorPantalla::instancia().color(FUENTE_AZUL);
 
 	Plataforma plat;
 
@@ -23,13 +24,13 @@ int main(int argc, char** argv) {
 	int posicion;
 
 
-	for (int i = 0; i < 100 ; ++i) {
+	while (plat.seguirActivando()) {
 
 		usleep(TIEMPO_TRABAJO);
 
 		posicion = posicionRandom(capacidad);
 
-		SalidaPorPantalla::instancia().mostrar("intentando activar dispositivo en posicion ", posicion);
+		//SalidaPorPantalla::instancia().mostrar("intentando activar dispositivo en posicion ", posicion);
 
 		plat.activarDispositivo(posicion);
 	}

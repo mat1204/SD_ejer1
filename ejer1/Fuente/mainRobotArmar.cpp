@@ -16,6 +16,7 @@
 int main(int argc,char** argv) {
 
 	SalidaPorPantalla* salida = &SalidaPorPantalla::instancia();
+	SalidaPorPantalla::instancia().color(FUENTE_ROJO);
 
 	if (argc != 2) {
 		salida->error("Error, se deben ingresar el numero de robot");

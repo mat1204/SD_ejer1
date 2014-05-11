@@ -107,30 +107,33 @@ void ComponenteRobot::procDetectarFrecuencia() {
 
 	_respuesta.resultado.booleano = _plataforma.detectarFrecuencia();
 
-	if (_respuesta.resultado.booleano) {
-		SalidaPorPantalla::instancia().mostrar("Frecuencia detectada");
-	}
-	else {
-		SalidaPorPantalla::instancia().mostrar("Frecuencia NO detectada");
-	}
+//	if (_respuesta.resultado.booleano) {
+//		SalidaPorPantalla::instancia().mostrar("Frecuencia detectada");
+//	}
+//	else {
+//		SalidaPorPantalla::instancia().mostrar("Frecuencia NO detectada");
+//	}
 
 }
 void ComponenteRobot::procSeguirTrabajando() {
 	_respuesta.resultado.booleano = _plataforma.seguirTrabajando();
 	_seguirTrabajando = _respuesta.resultado.booleano;
 
-	if (_seguirTrabajando == false) {
-		SalidaPorPantalla::instancia().mostrar("No seguir trabajando");
-	}
+//	if (_seguirTrabajando == false) {
+//		SalidaPorPantalla::instancia().mostrar("No seguir trabajando");
+//	}
+
 }
+
+
 void ComponenteRobot::procSacarDispositivo() {
 	int numDisp;
 	_respuesta.resultado.booleano = _plataforma.sacarDispositivo(numDisp);
 	_respuesta.numDispositivo = numDisp;
 
-	if (_respuesta.resultado.booleano) {
-		SalidaPorPantalla::instancia().mostrar("Se saco dispositivo n°", numDisp);
-	}
+//	if (_respuesta.resultado.booleano) {
+//		SalidaPorPantalla::instancia().mostrar("Se saco dispositivo n°", numDisp);
+//	}
 }
 
 void ComponenteRobot::procPlataformaLlena(){
@@ -140,11 +143,11 @@ void ComponenteRobot::procPlataformaLlena(){
 	_respuesta.resultado.booleano = _plataforma.plataformaLlena();
 
 
-	if (_respuesta.resultado.booleano) {
-		SalidaPorPantalla::instancia().mostrar("Plataforma llena");
-	}
-	else
-		SalidaPorPantalla::instancia().mostrar("Plataforma no llena y con lugar reservado");
+//	if (_respuesta.resultado.booleano) {
+//		SalidaPorPantalla::instancia().mostrar("Plataforma llena");
+//	}
+//	else
+//		SalidaPorPantalla::instancia().mostrar("Plataforma no llena y con lugar reservado");
 }
 
 void ComponenteRobot::procEsperar() {
@@ -156,10 +159,11 @@ void ComponenteRobot::procColocarDispositivo() {
 
 	_respuesta.resultado.booleano = _plataforma.colocarDispositivo(_ultimoMsj.numDispositivo);
 	_respuesta.numDispositivo = _ultimoMsj.numDispositivo;
-	if (_respuesta.resultado.booleano)
-		SalidaPorPantalla::instancia().mostrar("Dispositivo Colocado n°", _respuesta.numDispositivo);
-	else
-		SalidaPorPantalla::instancia().mostrar("Dispositivo NO Colocado");
+
+//	if (_respuesta.resultado.booleano)
+//		SalidaPorPantalla::instancia().mostrar("Dispositivo Colocado n°", _respuesta.numDispositivo);
+//	else
+//		SalidaPorPantalla::instancia().mostrar("Dispositivo NO Colocado");
 }
 
 void ComponenteRobot::procFinDeArmador() {

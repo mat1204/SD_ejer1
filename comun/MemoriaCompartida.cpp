@@ -57,13 +57,15 @@ void MemoriaCompartida::leer(int posicion, void* dato, int tamDato) const {
 	memcpy(dato, origen, tamDato);
 }
 
-void MemoriaCompartida::escribir(int posicion, void* dato, int tamDato) {
+void MemoriaCompartida::escribir(int posicion,const void* dato, int tamDato) {
 	if (posicion < 0 || tamDato <= 0) {
 		_salida->error("Parametros al escribir en MemCompartida incorrectos");
+		exit(EXIT_FAILURE);
 	}
 
 	if ((posicion + tamDato) > _tamanio) {
 		_salida->error("Error al escribir en posicion de memoria no valida");
+		exit(EXIT_FAILURE);
 	}
 
 	void* destino = (void*) (_memoria + posicion);
@@ -75,6 +77,7 @@ void MemoriaCompartida::destruir() {
 		shmdt((void*)_memoria);
 		if (shmctl(_idMemoria, IPC_RMID, NULL) == -1) {
 			_salida->error("No se pudo eliminar el segmento de MemCompartida");
+			exit(EXIT_FAILURE);
 		}
 
 		_memoria = NULL;

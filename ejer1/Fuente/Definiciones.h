@@ -152,6 +152,6 @@ typedef struct {
 #define ET_PILAS_ROBOT		"PILAS_ROBOT_"
 
 
-#define TIEMPO_TRABAJO    10000000
+#define TIEMPO_TRABAJO    1000000
 
 #endif /* DEFINICIONES_H_ */

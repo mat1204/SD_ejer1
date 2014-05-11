@@ -15,7 +15,7 @@ public:
 	MemoriaCompartida(const char* ruta, char id, int tamanio);
 
 	void leer(int posicion, void* dato, int tamDato) const;
-	void escribir(int posicion, void* dato, int tamDato);
+	void escribir(int posicion, const void* dato, int tamDato);
 
 	void inicializar();
 

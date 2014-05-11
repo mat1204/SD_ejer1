@@ -10,5 +10,4 @@
 
 #define COMP_UBUNTU
 
-
 #endif /* MACROS_H_ */

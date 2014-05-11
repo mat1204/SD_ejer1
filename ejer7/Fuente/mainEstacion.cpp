@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 
 	std::string nomEst = ESTACIONES[numEstacion];
 	SalidaPorPantalla::instancia().etiqueta(nomEst.c_str(), numEstacion);
-
+	SalidaPorPantalla* sal = &SalidaPorPantalla::instancia();
 
 
 	EstacionVirtual e(numEstacion);
@@ -44,15 +44,25 @@ int main(int argc, char** argv) {
 
 	stPieza pieza;
 
+	int numPieza = 1000;
+
 	while (true) {
 
-		// obtener pieza de estacion anterior
-		SalidaPorPantalla::instancia().mostrar("Esperando Estacion ANTERIOR");
-		estacion->obtenerPiezaEstAnt(pieza);
-		SalidaPorPantalla::instancia().mostrar("Pieza conseguida de estacion anterior");
+		if (numEstacion == 0) {
+			pieza.numPieza = numPieza++;
+			pieza.estaciones = 0;
+
+		}
+		else {
+			// obtener pieza de estacion anterior
+			sal->mostrar("Esperando Estacion ANTERIOR");
+			estacion->obtenerPiezaEstAnt(pieza);
+			sal->mostrar("Pieza conseguida de estacion anterior");
+		}
+
 
 		if (materiales < 10) {
-			SalidaPorPantalla::instancia().mostrar("Materiales Solicitados");
+			sal->mostrar("Materiales Solicitados");
 			materiales += estacion->solicitarMateriales();
 		}
 		// trabajando
@@ -61,10 +71,18 @@ int main(int argc, char** argv) {
 
 		pieza.estaciones++;
 
-		// pasar pieza a la estacion siguiente
-		SalidaPorPantalla::instancia().mostrar("Esperando por Estacion SIGUIENTE");
-		estacion->esperarEstSig(pieza);
-		SalidaPorPantalla::instancia().mostrar("Pieza sacada por estacion siguiente");
+
+
+		if (numEstacion == (CANT_ESTACIONES - 1)) {
+			sal->mostrar("Llevando a playa de estacionamiento", pieza.numPieza);
+		}
+		else {
+			// pasar pieza a la estacion siguiente
+			sal->mostrar("Esperando por Estacion SIGUIENTE");
+			estacion->esperarEstSig(pieza);
+			sal->mostrar("Pieza sacada por estacion siguiente");
+		}
+
 
 	}
 

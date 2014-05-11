@@ -16,13 +16,16 @@
 
 class Estacion :public iEstacion {
 public:
-	Estacion(int numEstacion);
+	Estacion(int numEstacion = -1);
 
 	virtual void obtenerPiezaEstAnt(stPieza& pieza);
 
 	virtual void esperarEstSig(const stPieza& pieza);
 
 	virtual int solicitarMateriales();
+
+	static void inicializarEstaciones();
+	static void destruirEstaciones();
 
 	virtual ~Estacion();
 

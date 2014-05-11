@@ -45,79 +45,18 @@ void visor();
 
 void lanzarVisor();
 
-void testConfiguracion() {
-	int p1=23, p2 = 2 ,p3=284455 , p4 = 34568291;
-
-	std::cout << "Inicio de Pruebas." << std::endl;
-
-	std::string etiq;
-
-	{
-		ArchConfiguracion config(true);
-
-		std::cout << "Creacon de archivo." << std::endl;
-
-		etiq = "num1";
-		config.guardar(etiq.c_str(), p1);
-
-		etiq = "num2";
-		config.guardar(etiq.c_str(), p2);
-
-		etiq = "num3";
-		config.guardar(etiq.c_str(), p3);
-
-		etiq = "num5";
-		config.guardar(etiq.c_str(), p4);
-
-		config.serializar();
-
-	}
-
-
-	{
-
-		std::cout << "Comienza lectura." << std::endl;
-		ArchConfiguracion arch;
-
-		int valor;
-		arch.leer("num2", valor);
-
-		if (valor != p2) {
-			std::cout << "Error en p2" << std::endl;
-		}
-
-		arch.leer("num1", valor);
-
-		if (valor != p1) {
-			std::cout << "Error en p1" << std::endl;
-		}
-
-		arch.leer("num3", valor);
-
-		if (valor != p3) {
-			std::cout << "Error en p3" << std::endl;
-		}
-
-		arch.leer("num5", valor);
-
-		if (valor != p4) {
-			std::cout << "Error en p4" << std::endl;
-		}
-
-
-		std::cout  << "Fin de prueba" << std::endl;
-	}
-
-}
-
 int main(int argc, char** argv) {
 
-	if (argc != 2) {
-		std::cout << "Se debe Ingresar -c,-i o -t para configurar, iniciar o eliminar recursos." << std::endl;
-		exit(2);
-	}
-
 	SalidaPorPantalla::instancia().etiqueta("Lanzador");
+
+	if (argc != 2) {
+		std::cout << "Se debe Ingresar alguno de los siguientes parametros:" << std::endl;
+		std::cout << " -c establecer los parametros de configuracion (cantidad de robots, capacidad de plataforma, etc)" << std::endl;
+		std::cout << " -i iniciar la aplicacion con la configuracion dada" << std::endl;
+		std::cout << " -t eliminar los recursos utilizados por la aplicacion" << std::endl;
+		std::cout << " -m muesta la configuracion actual" << std::endl;
+		return 0;
+	}
 
 	if (strcmp(argv[1], "-c") == 0) {
 		configurar();
@@ -142,8 +81,7 @@ int main(int argc, char** argv) {
 
 void lanzarVisor() {
 	system("xterm -e watch -n1 \"./lanzador -v\" &");
-
-	usleep(TIEMPO_TRABAJO);
+	usleep(TIEMPO_TRABAJO / 2);
 }
 
 void mostrarConfiguracion() {
@@ -248,7 +186,7 @@ void correr() {
 			exit(2);
 		}
 		else {
-			SalidaPorPantalla::instancia().mostrar("Lanzado proceso Armador-", i);
+			//SalidaPorPantalla::instancia().mostrar("Lanzado proceso Armador-", i);
 		}
 
 		nombre.str("");
@@ -261,7 +199,7 @@ void correr() {
 			exit(2);
 		}
 		else {
-			SalidaPorPantalla::instancia().mostrar("Lanzado proceso Frecuencia-", i);
+			//SalidaPorPantalla::instancia().mostrar("Lanzado proceso Frecuencia-", i);
 		}
 
 		std::cout << "Se ARRANCARON los procesos del robot " << ss.str() << std::endl;

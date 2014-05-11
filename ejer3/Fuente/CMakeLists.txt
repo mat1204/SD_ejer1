@@ -1,5 +1,5 @@
 project(Ejer3)
-set (DCMAKE_BUILD_TYPE Debug)
+set (CMAKE_BUILD_TYPE Debug)
 set (dependencias ColaComponentes.cpp GestorPedidos.cpp)
 
 include_directories(../../comun)

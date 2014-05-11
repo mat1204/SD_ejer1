@@ -8,6 +8,7 @@
 
 #include "Definiciones.h"
 #include "ColaComponentes.h"
+#include "Estacion.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -43,6 +44,8 @@ void inicializar() {
 	gestor.crearArchivo(RUTA_ARCH_COLA);
 
 	ColaComponentes cola(true);
+
+	Estacion::inicializarEstaciones();
 }
 
 void lanzar() {
@@ -69,6 +72,8 @@ void lanzar() {
 }
 
 void limpiar() {
+	Estacion::destruirEstaciones();
+
 	ColaComponentes cola;
 	cola.destruir();
 
