@@ -6,6 +6,7 @@
  */
 
 #include "Definiciones.h"
+#include "CompEstacion.h"
 
 
 int main(int argc, char** argv) {

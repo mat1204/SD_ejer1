@@ -61,11 +61,11 @@ void EstacionVirtual::iniciarComponente() {
 
 	std::stringstream ss;
 	ss << _numEstacion;
-
+	const char* arg = ss.str().c_str();
 	pid = fork();
 
 	if (pid == 0) {
-		execl("./comp","Componente", ss.str().c_str());
+		execl("./comp","Componente", arg, NULL);
 		SalidaPorPantalla::instancia().error("No se pudo iniciar proceso Componente");
 	}
 }

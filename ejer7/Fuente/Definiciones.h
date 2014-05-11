@@ -44,6 +44,9 @@ typedef struct {
 
 #define CANT_ESTACIONES 	6
 
+#define NUM_PRIMER_ESTACION 	0
+#define NUM_ULTIMA_ESTACION		5
+
 #define ID_EST_VIRTUAL_0	1000
 #define ID_ESTACION_0		2000
 #define ID_EST_COMP_0		3000

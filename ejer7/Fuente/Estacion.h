@@ -41,7 +41,7 @@ private:
 	int _idEstacion;
 
 	Semaforo *_semHayPieza;
-	Semaforo *_semPiezaLista;
+	Semaforo *_semPiezaSacada;
 
 	ColaPiezas _colaPiezas;
 };

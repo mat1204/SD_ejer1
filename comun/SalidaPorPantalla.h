@@ -19,6 +19,7 @@
 #define FUENTE_CYAN			36
 #define FUENTE_AMARILLA		33
 #define FUENTE_MAGENTA		35
+#define FUENTE_BLANCA		37
 
 
 #define FONDO_NEGRO			40
