@@ -51,8 +51,10 @@ Semaforo::Semaforo(const char* ruta ,int cant, char id) {
 	}
 }
 
+
 Semaforo::~Semaforo() {
 }
+
 
 void Semaforo::inicializar(int val) {
 	semnum valor;
@@ -66,10 +68,10 @@ void Semaforo::inicializar(int val) {
 	}
 }
 
-void Semaforo::wait(int numRobot) {
-	if ( numRobot < _cant && numRobot >= 0 ) {
+void Semaforo::wait(int numSem) {
+	if ( numSem < _cant && numSem >= 0 ) {
 		struct sembuf op;
-		op.sem_num = numRobot;
+		op.sem_num = numSem;
 		op.sem_flg = SEM_UNDO;
 		op.sem_op = -1;
 
@@ -80,15 +82,15 @@ void Semaforo::wait(int numRobot) {
 
 	}
 	else {
-		_salida->error("Error numero de semaforo de robont en wait");
+		_salida->error("Error numero de semaforo en signal, accediendo: ", numSem);
 		exit(EXIT_FAILURE);
 	}
 }
 
-void Semaforo::signal(int numRobot) {
-	if ( numRobot < _cant && numRobot >= 0 ) {
+void Semaforo::signal(int numSem) {
+	if ( numSem < _cant && numSem >= 0 ) {
 		struct sembuf op;
-		op.sem_num = numRobot;
+		op.sem_num = numSem;
 		op.sem_flg = SEM_UNDO;
 		op.sem_op = 1;
 
@@ -99,7 +101,7 @@ void Semaforo::signal(int numRobot) {
 
 	}
 	else {
-		_salida->error("Error numero de semaforo de robont en signal");
+		_salida->error("Error numero de semaforo en signal, accediendo: ", numSem);
 		exit(EXIT_FAILURE);
 	}
 }

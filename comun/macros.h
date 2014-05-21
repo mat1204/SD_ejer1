@@ -10,4 +10,12 @@
 
 #define COMP_UBUNTU
 
+#include "ArchConfiguracion.h"
+#include "ColaMensajes.h"
+#include "GestorArch.h"
+#include "MemoriaCompartida.h"
+#include "SalidaPorPantalla.h"
+#include "Semaforo.h"
+#include "Socket.h"
+
 #endif /* MACROS_H_ */

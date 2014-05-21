@@ -15,11 +15,13 @@ ColaComponentes::~ColaComponentes() {
 }
 
 void ColaComponentes::enviar(const stMensaje& msj) {
+	//SalidaPorPantalla::instancia().mostrar("Enviando msj...");
 	_colaReal.enviar((const void*) &msj, TAM_MSJ_COLA);
 }
 
 void ColaComponentes::recibir(const stMensaje&msj, int idReceptor) {
 	_colaReal.recibir((void*) &msj, TAM_MSJ_COLA, idReceptor);
+	//SalidaPorPantalla::instancia().mostrar("Mensaje recibido.");
 }
 
 void ColaComponentes::destruir() {

@@ -21,6 +21,7 @@ SalidaPorPantalla::SalidaPorPantalla() : _identificador("SIN-ETIQUETA"), _id(-1)
 	_esperaTrasImprimir = true;
 
 	_usarColor = false;
+	_imprimir = true;
 
 }
 
@@ -34,6 +35,9 @@ SalidaPorPantalla& SalidaPorPantalla::instancia() {
 }
 
 void SalidaPorPantalla::mostrar(const char* mensaje) {
+	if (_imprimir == false)
+		return;
+
 	if (_filtrar && _identificador != _FILTRO)
 		return;
 
@@ -120,7 +124,7 @@ void SalidaPorPantalla::agregarAlMsj(const char* texto) {
 }
 
 void SalidaPorPantalla::mostrarMsj() {
-	_ss << std::endl;
+	//_ss << std::endl;
 	this->mostrar(_ss.str());
 	_ss.str("");
 }
@@ -150,4 +154,12 @@ void SalidaPorPantalla::color(int colorFuente) {
 	this->_fuenteColor = colorFuente;
 
 	_usarColor = true;
+}
+
+void SalidaPorPantalla::dormirTrasImprimir(bool dormir) {
+	_esperaTrasImprimir = dormir;
+}
+
+void SalidaPorPantalla::imprimirMensajes(bool imprimir) {
+	_imprimir = imprimir;
 }

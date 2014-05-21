@@ -11,11 +11,11 @@
 class iSalaPersona {
 public:
 
-	virtual bool hayLuga() = 0;
+	virtual bool hayLugar() = 0;
 
 	virtual void esperarPorLugar() = 0;
 
-	virtual void hacerCola(const int numPersona) = 0;
+	virtual bool hacerCola(const int numPersona) = 0;
 
 	virtual void subirCableCarril() = 0;
 

@@ -15,8 +15,8 @@ public:
 	Semaforo(const char* ruta, int cant, char id);
 	virtual ~Semaforo();
 
-	void wait(int numRobot);
-	void signal(int numRobot);
+	void wait(int numSem = 0);
+	void signal(int numSem = 0);
 
 	void inicializar(int valor);
 	void destruir();

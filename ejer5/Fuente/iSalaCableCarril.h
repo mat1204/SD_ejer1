@@ -13,7 +13,7 @@ public:
 
 	virtual bool salaVacia() = 0;
 
-	virtual void sacarPersona(int& numPersona) = 0;
+	virtual bool sacarPersona(int& numPersona) = 0;
 
 	virtual void subirPersona(const int numPersona) = 0;
 

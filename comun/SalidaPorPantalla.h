@@ -57,6 +57,10 @@ public:
 
 	void color(int colorFuente);
 
+	void imprimirMensajes(bool imprimir);
+
+	void dormirTrasImprimir(bool dormir);
+
 	static SalidaPorPantalla& instancia();
 
 private:
@@ -78,6 +82,8 @@ private:
 
 	std::string _FILTRO;
 	bool _filtrar;
+
+	bool _imprimir;
 
 	// para el uso del color
 	bool _usarColor;
