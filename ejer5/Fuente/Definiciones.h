@@ -82,6 +82,9 @@ typedef struct {
 
 typedef struct {
 	long _mtype;
+
+	int numCC;
+	int numPersona;
 } stMensajeBloqueo;
 
 #define TAM_MSJ_BLQ		(sizeof(stMensajeBloqueo) - sizeof(long int))
@@ -166,7 +169,8 @@ namespace EstLugar {
 
 /************************************************************************/
 
-#define TIEMPO_TRABAJO		10000000
+#define TIEMPO_TRABAJO		1000000
 
+#define FRANDOM		( ((float) rand()) / ((float) RAND_MAX) )
 
 #endif /* DEFINICIONES_H_ */

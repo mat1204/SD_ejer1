@@ -11,7 +11,7 @@
  */
 #include "inet.h"
 
-int enviar(int sockfd, void *datos, size_t nbytes)
+int _skc_enviar(int sockfd, const void *datos, size_t nbytes)
 {
 	/* Variables. */
 	char mostrar[80];
@@ -26,8 +26,12 @@ int enviar(int sockfd, void *datos, size_t nbytes)
 	 */
 	while(nbytes)
 	{
-		ult_envio = write(sockfd, ((char *) datos) + enviados,
-				nbytes);
+
+//		ult_envio = write(sockfd, ((const char *) datos) + enviados,	nbytes);
+
+		ult_envio = send(sockfd,  ((const char *) datos) + enviados,	nbytes, 0);
+
+
 		if (ult_envio <= 0) {
 			sprintf(mostrar," envio, error %d\n", ult_envio);
 			write(fileno(stdout), mostrar, strlen(mostrar));

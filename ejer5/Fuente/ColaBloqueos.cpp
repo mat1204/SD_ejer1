@@ -18,17 +18,16 @@ ColaBloqueos::~ColaBloqueos() {
 }
 
 
-void ColaBloqueos::enviar(int id) {
-	stMensajeBloqueo msj;
-	msj._mtype = id;
-
+void ColaBloqueos::enviar(const stMensajeBloqueo& msj) {
+//	stMensajeBloqueo msj;
+//	msj._mtype = id;
 	_cola.enviar((const void*) &msj, TAM_MSJ_BLQ);
 }
 
-void ColaBloqueos::recibir(int id) {
-	stMensajeBloqueo msj;
+void ColaBloqueos::recibir(stMensajeBloqueo& msj, int idReceptor) {
+	//stMensajeBloqueo msj;
 
-	_cola.recibir((void*) &msj, TAM_MSJ_BLQ, id);
+	_cola.recibir((void*) &msj, TAM_MSJ_BLQ, idReceptor);
 }
 
 void ColaBloqueos::destruir() {

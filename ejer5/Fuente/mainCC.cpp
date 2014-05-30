@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 	sal->color(FUENTE_ROJO);
 	sal->etiqueta("CableCarril", numCC);
 
-	SalaVirtual sc(numCC,TpAgente::CABLE_CARRIL, LgSala::CIMA);
+	SalaVirtual sc(numCC, TpAgente::CABLE_CARRIL, LgSala::CIMA);
 	SalaVirtual sp(numCC, TpAgente::CABLE_CARRIL, LgSala::PIE);
 
 	iSalaCableCarril *salaPie = &sp, *salaCima = &sc;
@@ -43,23 +43,24 @@ int main(int argc, char** argv) {
 
 
 	std::string sPie("Pie"), sCima("Cima");
-	std::string *sActual;
+	std::string *sSalaProxima, *sSalaActual;
 
-	salaActual = salaPie;
-	sActual = &sCima;
-
+	salaActual = salaCima;
+	sSalaProxima = &sPie;
+	sSalaActual = &sCima;
 	while (true) {
 
 
 		while (salaActual->salaVacia() == false) {
-			if (salaPie->sacarPersona(numPersona)) {
-				salaPie->subirPersona(numPersona);
+			if (salaActual->sacarPersona(numPersona)) {
+				sal->mostrar("Subiendo persona n°", numPersona);
+				salaActual->subirPersona(numPersona);
 
 				sal->agregarAlMsj("Se subio la persona n°");
 				sal->agregarAlMsj(numPersona);
 
 				sal->agregarAlMsj(", en la zona del ");
-				sal->agregarAlMsj(sActual->c_str());
+				sal->agregarAlMsj(sSalaActual->c_str());
 
 				sal->mostrarMsj();
 
@@ -69,21 +70,23 @@ int main(int argc, char** argv) {
 		}
 
 		sal->agregarAlMsj("llendo a la zona de \"");
-		sal->agregarAlMsj(sActual->c_str());
-		sal->agregarAlMsj("\" de la Montaña");
+		sal->agregarAlMsj(sSalaProxima->c_str());
+		sal->agregarAlMsj("\" de la Montaña con ");
+		sal->agregarAlMsj(lugares.size());
+		sal->agregarAlMsj(" personas");
 		sal->mostrarMsj();
 
-		usleep(TIEMPO_TRABAJO);
+		usleep(TIEMPO_TRABAJO * 3);
 
 		sal->agregarAlMsj("Arrive a la zona de \"");
-		sal->agregarAlMsj(sActual->c_str());
+		sal->agregarAlMsj(sSalaProxima->c_str());
 		sal->agregarAlMsj("\" de la Montaña");
 		sal->mostrarMsj();
 
 		int i = 0;
 		while ( i < lugares.size() ) {
 			salaActual->bajarPersona(lugares[i]);
-			sal->mostrar("Se bajo persona n°", numPersona);
+			sal->mostrar("Se bajo persona n°", lugares[i]);
 			++i;
 		}
 		lugares.clear();
@@ -94,11 +97,13 @@ int main(int argc, char** argv) {
 
 		if (salaActual == salaPie) {
 			salaActual = salaCima;
-			sActual = &sPie;
+			sSalaProxima = &sPie;
+			sSalaActual = &sCima;
 		}
 		else if (salaActual == salaCima) {
 			salaActual = salaPie;
-			sActual = &sCima;
+			sSalaProxima = &sCima;
+			sSalaActual = &sPie;
 		}
 
 	}

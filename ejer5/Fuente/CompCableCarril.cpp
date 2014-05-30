@@ -24,11 +24,14 @@ CompCableCarril::CompCableCarril(int numCableCarril) :
 	_salaPie(LgSala::PIE), _salaCima(LgSala::CIMA)
 {
 
+	_numCC = numCableCarril;
 	_idComp = IdCablaCarrilComp(numCableCarril);
 	_idCC = IdCableCarril(numCableCarril);
 
 	_seguirTrabajando = true;
 	_enviarResp = false;
+
+	SalidaPorPantalla::instancia().imprimirMensajes(false);
 }
 
 CompCableCarril::~CompCableCarril() {
@@ -86,7 +89,7 @@ void CompCableCarril::esperarMsj() {
 
 void CompCableCarril::enviarResp() {
 	if (_enviarResp) {
-		_msjResp._mtype = _ultimoMsj._idEmisor;
+		_msjResp._mtype = _idCC; //_ultimoMsj._idEmisor;
 		_msjResp._idEmisor = _idComp;
 
 		_cola.enviar(_msjResp);
@@ -106,8 +109,9 @@ void CompCableCarril::procSacarPersona() {
 	bool res = _salaActual->sacarPersona(numPersona);
 
 	if (res) {
-	SalidaPorPantalla::instancia().mostrar("Sacando de la cola persona n°", numPersona);
-	liberarPersona(numPersona);
+		SalidaPorPantalla::instancia().mostrar("Sacando de la cola persona n°", numPersona);
+		liberarPersona(numPersona);
+
 	}
 	else {
 		SalidaPorPantalla::instancia().error("no se saco persona de la cola");
@@ -115,16 +119,14 @@ void CompCableCarril::procSacarPersona() {
 
 	_msjResp.numPersona = numPersona;
 	_msjResp.resultado.booleano = res;
-
 	_enviarResp = true;
 }
 
 void CompCableCarril::procSubirPersona() {
-	stMensaje msjPersona;
+	stMensajeBloqueo msjPersona;
 
 	// esperando recibir mensaje de persona
-	//_cola.recibir(msjPersona, _idComp);
-	_colaBlq.recibir(_idComp);
+	_colaBlq.recibir(msjPersona, _idComp);
 
 	_enviarResp = true;
 }
@@ -138,5 +140,10 @@ void CompCableCarril::procBajarPersona() {
 
 
 void CompCableCarril::liberarPersona(NumeroPersonaSala numPersona) {
-	_colaBlq.enviar(IdPersonaComp(numPersona));
+	stMensajeBloqueo msjPersona;
+	msjPersona._mtype = IdPersonaComp(numPersona);
+	msjPersona.numCC = _numCC;
+	msjPersona.numPersona = -1;
+
+	_colaBlq.enviar(msjPersona);
 }

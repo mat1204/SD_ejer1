@@ -4,7 +4,7 @@ set( CMAKE_BUILD_TYPE Debug)
 
 aux_source_directory(../../comun comun)
 
-set( dep Mutex.cpp SalaVirtual.cpp ColaComponentes.cpp Sala.cpp CompCableCarril.cpp CompPersona.cpp AreaPersonas.cpp ColaBloqueos.cpp Componente.cpp)
+set( dep Mutex.cpp SalaVirtual.cpp ColaComponentes.cpp Sala.cpp CompCableCarril.cpp CompPersona.cpp AreaPersonas.cpp ColaBloqueos.cpp )
 
 
 add_executable(compCC mainCompCC.cpp ${comun} ${dep})

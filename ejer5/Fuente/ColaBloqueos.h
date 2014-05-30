@@ -14,9 +14,9 @@ class ColaBloqueos {
 public:
 	ColaBloqueos(bool crear = false);
 
-	void enviar(int id);
+	void enviar(const stMensajeBloqueo& msj);
 
-	void recibir(int id);
+	void recibir(stMensajeBloqueo& msj, int idReceptor);
 
 	void destruir();
 

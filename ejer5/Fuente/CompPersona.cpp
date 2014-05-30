@@ -10,14 +10,19 @@
 extern void mostrarDatos(stMensaje& msj);
 
 CompPersona::CompPersona(int numPersona) :
- _salaPie(LgSala::PIE), _salaCima(LgSala::CIMA) {
+ _salaPie(LgSala::PIE), _salaCima(LgSala::CIMA)
+{
+	_numPersona = numPersona;
 	_idComp = IdPersonaComp(numPersona);
 	_idPersona = IdPersona(numPersona);
 
 	_seguirTrabajando = true;
 	_enviarResp = false;
 
-	SalidaPorPantalla::instancia().mostrar("Componente inciado");
+	//SalidaPorPantalla::instancia().mostrar("Componente inciado");
+	SalidaPorPantalla::instancia().imprimirMensajes(false);
+
+	_numCCaSubir = -1;
 }
 
 CompPersona::~CompPersona() {
@@ -81,7 +86,7 @@ void CompPersona::enviarResp() {
 
 		_cola.enviar(_msjResp);
 	}
-	else {
+	else if( _seguirTrabajando == true ) {
 		SalidaPorPantalla::instancia().error("No se puede enviar respuesta");
 	}
 }
@@ -98,14 +103,17 @@ void CompPersona::procEsperarPorLugar() {
 }
 
 void CompPersona::procHacerCola() {
-	stMensaje msjCC;
+	stMensajeBloqueo msjCC;
 	_msjResp.resultado.booleano = _salaActual->hacerCola(_ultimoMsj.numPersona);
 
 	if (_msjResp.resultado.booleano) {
 		// espero msj de cable carril
 		SalidaPorPantalla::instancia().mostrar("esperando msj de CC...");
-		//_cola.recibir(msjCC, _idComp);
-		_colaBlq.recibir(_idComp);
+
+
+		_colaBlq.recibir(msjCC, _idComp);
+		_msjResp.numCC = msjCC.numCC;
+
 		_enviarResp = true;
 	}
 	else {
@@ -117,13 +125,18 @@ void CompPersona::procSubirCableCarril() {
 
 	enviarACC(_ultimoMsj.numCC);
 
+	stMensajeBloqueo msjCC;
 
-	//_cola.recibir(msjPersona, _idComp);
-	_colaBlq.recibir(_idComp);
+	_colaBlq.recibir(msjCC, _idComp);
 
 	_enviarResp = true;
 }
 
 void CompPersona::enviarACC(int numCC) {
-	_colaBlq.enviar(IdCablaCarrilComp(numCC));
+	stMensajeBloqueo msjCC;
+	msjCC._mtype = IdCablaCarrilComp(numCC);
+	msjCC.numCC = -1;
+	msjCC.numPersona = _numPersona;
+
+	_colaBlq.enviar(msjCC);
 }

@@ -48,7 +48,7 @@ private:
 
 	ColaComponentes _cola;
 	ColaBloqueos _colaBlq;
-	int _idComp, _idCC;
+	int _numCC, _idComp, _idCC;
 
 	bool _seguirTrabajando;
 	bool _enviarResp;

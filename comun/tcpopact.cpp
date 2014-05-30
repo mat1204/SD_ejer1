@@ -18,7 +18,7 @@
 int tcpopact(const char *server, int puerto)
 {
  int    sockfd;			     /* socket de la conexion */
- struct sockaddr_in	serv_addr;
+ struct sockaddr_in	 serv_addr;
  struct hostent		*ptr_server; /*puntero a dir del server(gethostbyname)*/
  /*			
   *			ALOCAR EL SOCKET Y COMUNICARSE CON EL SERVER
@@ -39,6 +39,8 @@ int tcpopact(const char *server, int puerto)
   *	        Convertir Host-TO-Network-Short integer 
   */
 	serv_addr.sin_port        = htons(puerto); /* valido */
+
+
   /*
   *	Paso 4: Cargar direccion del server en el socket
   *	        Convertir nombre del host en su direccion 
@@ -68,4 +70,37 @@ int tcpopact(const char *server, int puerto)
   *		se conecto exitosamente
   */
   return(sockfd);
-} 
+}
+
+
+int tcpopact_dir(const struct sockaddr_in& dir, int puerto)
+{
+ int    sockfd;			     /* socket de la conexion */
+ struct sockaddr_in	 serv_addr;
+ struct hostent		*ptr_server; /*puntero a dir del server(gethostbyname)*/
+
+	bzero((char *) &serv_addr, sizeof(serv_addr));
+
+	memcpy((void*) &serv_addr,(const void*) &dir, sizeof(serv_addr));
+
+	serv_addr.sin_family      = AF_INET;
+	serv_addr.sin_port        = htons(puerto); /* valido */
+
+
+ if ( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	{
+	return (-1); /* error en la creacion del socket */
+	}
+
+/*
+ * 	Connectarse al server.
+ */
+ if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+	{
+	return (-1); /* error en el connect */
+	}
+
+  return(sockfd);
+}
+
+

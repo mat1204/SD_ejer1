@@ -44,6 +44,7 @@ private:
 	void enviarACC(int numCC);
 
 	int _idComp, _idPersona;
+	int _numCCaSubir;
 
 	stMensaje _ultimoMsj, _msjResp;
 
@@ -55,6 +56,7 @@ private:
 
 	bool _seguirTrabajando;
 	bool _enviarResp;
+	int _numPersona;
 };
 
 #endif /* COMPPERSONA_H_ */

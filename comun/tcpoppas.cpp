@@ -13,7 +13,7 @@
 
 #include	"inet.h"
 
-int tcpoppas(int puerto)
+int tcpoppas(int puerto, int enEspera)
 {
  char mostrar[120];      /* mensajes en la pantalla */ 
  int	sockfd;		/* socket que sirve como template */ 
@@ -37,8 +37,8 @@ int tcpoppas(int puerto)
 	{
 	 return (-1); /* error no se puede abrir el stream socket */
 	 }
-	 sprintf (mostrar,"server: socket creado %d\n", sockfd);
-         write(fileno(stdout), mostrar, strlen(mostrar));
+//	 sprintf (mostrar,"server: socket creado %d\n", sockfd);
+//     write(fileno(stdout), mostrar, strlen(mostrar));
  /*
   * 		Vincular el socket con la direccion local 
   */
@@ -46,14 +46,17 @@ int tcpoppas(int puerto)
 	{
  	 return (-1); /* error: no se puede hacer el bind */
  	 }
-	 sprintf (mostrar, "server: se hizo el bind\n");
-          write(fileno(stdout), mostrar, strlen(mostrar));
+
+//	 sprintf (mostrar, "server: se hizo el bind\n");
+//     write(fileno(stdout), mostrar, strlen(mostrar));
+
   /* 
    * 		Definir la cola de espera = hasta 5 clientes 
    */
- listen(sockfd, 5);
- sprintf (mostrar, "server: se hizo el listen con el socket %d\n", sockfd);
- write(fileno(stdout), mostrar, strlen(mostrar));
+ listen(sockfd, enEspera);
+
+// sprintf (mostrar, "server: se hizo el listen con el socket %d\n", sockfd);
+// write(fileno(stdout), mostrar, strlen(mostrar));
 
  return (sockfd);
 }

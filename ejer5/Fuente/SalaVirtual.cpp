@@ -28,13 +28,19 @@ SalaVirtual::SalaVirtual(int numero,TpAgente::TipoAgente tipo, LgSala::LugarSala
 
 	_lugar = lugar;
 
-	iniciarComponente();
+	//iniciarComponente();
 }
 
 
 SalaVirtual::~SalaVirtual() {
-}
 
+	_msj._mtype = _idComp;
+	_msj._idEmisor = _id;
+
+	_msj.metodo = MtdSala::CERRAR;
+
+	_cola.enviar(_msj);
+}
 
 void SalaVirtual::iniciarComponente() {
 
@@ -128,6 +134,7 @@ bool SalaVirtual::hacerCola(const int numPersona) {
 	enviarYEspRes();
 
 	_numCC_aSubir = _msj.numCC;
+	SalidaPorPantalla::instancia().mostrar("Por subir al cable carril n°", _numCC_aSubir);
 
 	return _msj.resultado.booleano;
 }
@@ -143,8 +150,8 @@ void SalaVirtual::enviarYEspRes() {
 	_msj._mtype = _idComp;
 	_msj._idEmisor = _id;
 
-	_msj.numPersona = _numero;
-	_msj.numCC = _numero;
+//	_msj.numPersona = _numero;
+//	_msj.numCC = _numero;
 
 	_msj.lugar = _lugar;
 

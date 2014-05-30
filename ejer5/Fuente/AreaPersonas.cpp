@@ -59,11 +59,9 @@ bool AreaPersonas::hacerCola(const int numPersona) {
 
 	escribirLugar(posicionPoner, numPersona);
 
-	if (posicionPoner >= (TAM_SALA_ESP - 1)) {
+
+	if (posPoner(1) >= TAM_SALA_ESP) {
 		posPoner(0, true);
-	}
-	else {
-		posPoner(1);
 	}
 
 	ocupados(1);
@@ -80,11 +78,8 @@ bool AreaPersonas::sacarPersona(int& numPersona) {
 	leerLugar(posicionSacar, numPersona);
 
 
-	if (posicionSacar >= (TAM_SALA_ESP - 1) ) {
+	if (posSacar(1) >= TAM_SALA_ESP) {
 		posSacar(0, true);
-	}
-	else {
-		posSacar(1);
 	}
 
 	ocupados(-1);
@@ -165,8 +160,9 @@ void AreaPersonas::mostrarEstado() {
 	const int posicionSacar = posSacar(), posicionPoner = posPoner();
 
 	cout << endl;
+	int cantOcupados = ocupados();
 
-	cout << "Lugares Ocupados: " << ocupados() << endl;
+	cout << "Lugares Ocupados: " << cantOcupados << endl;
 	cout << "Esp por Lleno: " << esperandoPorLleno() << endl;
 
 	//cout << "Esp por Vacio: " << esperandoPorVacio() << endl;
@@ -175,30 +171,35 @@ void AreaPersonas::mostrarEstado() {
 
 	bool mostrar = false;
 
-	bool ordenInvertido = (posicionSacar < posicionPoner);
+	//cout << "Pos Sacar: " << posicionSacar << endl;
+	//cout << "Pos Poner: " << posicionPoner << endl;
+
+	bool ordenInvertido = ( posicionSacar > posicionPoner );
+
+	int cantAMostrar = cantOcupados;
+
+
+//	if (ordenInvertido)
+//		cout << "Orden Invertido" << endl;
+//	else
+//		cout << "Orden Normal" << endl;
+
 
 	for (int i = 0; i < TAM_SALA_ESP ; ++i) {
 
 		if (ordenInvertido) {
-			if (i == posicionSacar)
-				mostrar = true;
-
-			if (i == posicionPoner)
-				mostrar = false;
+			mostrar = ( cantAMostrar > 0 && (i >= posicionSacar || i <= posicionPoner));
 		}
 		else {
-			if (i == posicionPoner)
-				mostrar = true;
-
-			if (i == posicionSacar)
-				mostrar = false;
+			mostrar = ( cantAMostrar > 0 && i >= posicionSacar && i <= posicionPoner);
 		}
 
 		NumeroPersonaSala numPer;
 
-		if (mostrar) {
+		if (mostrar || cantOcupados == TAM_SALA_ESP) {
 			leerLugar(i, numPer);
 			cout << i << "): Persona n°" << numPer;
+			cantAMostrar--;
 		}
 		else {
 			cout << i << "): VACIO";
@@ -216,6 +217,10 @@ void AreaPersonas::mostrarEstado() {
 
 		cout << endl;
 
+	}
+
+	if (cantAMostrar > 0) {
+		cout << "Falto mostrar "<< cantAMostrar << " lugares";
 	}
 
 	cout << endl;

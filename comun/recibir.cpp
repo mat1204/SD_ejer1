@@ -13,7 +13,7 @@
  */
 #include "inet.h"
 
-int recibir(int sockfd, void *datos, size_t nbytes)
+int _skc_recibir(int sockfd, void *datos, size_t nbytes)
 {
 	/* Variables. */
 	char mostrar[80];
@@ -27,8 +27,10 @@ int recibir(int sockfd, void *datos, size_t nbytes)
 	 */
 	while(nbytes)
 	{
-		ult_lec = read(sockfd, ((unsigned char *) datos) + leidos,
-				nbytes);
+//		ult_lec = read(sockfd, ((unsigned char *) datos) + leidos, nbytes);
+
+		ult_lec = recv(sockfd, ((unsigned char*) datos) + leidos, nbytes, 0);
+
 		if (ult_lec <= 0) return leidos;    /* error */
 		leidos += ult_lec;
 		nbytes -= ult_lec;

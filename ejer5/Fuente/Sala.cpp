@@ -109,6 +109,15 @@ bool Sala::hacerCola(const int numPersona) {
 	bool res;
 	_mtx->wait();
 
+	 while (_area->hayLugar() == false) {
+		_area->esperandoPorLleno(1);
+		_mtx->signal();
+
+		_semLleno->wait();
+		_mtx->wait();
+	}
+
+
 	res = _area->hacerCola(numPersona);
 
 	_mtx->signal();

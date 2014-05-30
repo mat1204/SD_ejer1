@@ -9,6 +9,7 @@
 #define SOCKET_H_
 
 #include <stdlib.h>
+#include "inet.h"
 
 class Socket {
 public:
@@ -20,17 +21,21 @@ public:
 
 	Socket(const Socket& orig);
 
-	const Socket operator = (const Socket& orig);
+	const Socket& operator = (const Socket& orig);
 
-	void enviar(void* datos, size_t tam);
+	void enviar(const void* datos, size_t tam);
 
 	void recibir(void* datos, size_t tam);
 
 	int conectar(const char* servidor, int puerto);
 
+	int conectar(struct sockaddr_in& direccion, int puerto);
+
 	void enlazar(int puerto, int conexEnEspera = 5);
 
-	Socket escucharConexion();
+	Socket aceptarConexion(struct sockaddr_in& direccion);
+
+	Socket aceptarConexion();
 
 	int descriptor();
 

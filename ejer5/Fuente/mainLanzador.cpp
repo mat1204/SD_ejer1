@@ -125,6 +125,20 @@ void correr() {
 		SalidaPorPantalla::instancia().mostrar("Lanzado productor");
 	}
 
+	ss << ID_PRODUCTOR_0;
+
+	pid = fork();
+
+	if (pid == 0) {
+		execl("./compPer", "compProductor", ss.str().c_str(), NULL);
+		SalidaPorPantalla::instancia().error("No se pudo iniciar Proceso Componente Productor");
+		exit(EXIT_FAILURE);
+	}
+	else {
+		SalidaPorPantalla::instancia().mostrar("Lanzado Comp Productor");
+	}
+
+
 	for (int i = 0; i < cantCC ; ++i) {
 		ss.str("");
 		ss << i;
@@ -134,11 +148,23 @@ void correr() {
 		if (pid == 0) {
 
 			execl("./cc", "CableCarril", ss.str().c_str(), NULL);
-			SalidaPorPantalla::instancia().error("No se pudod iniciar proceso Cable Carril");
+			SalidaPorPantalla::instancia().error("No se pudo iniciar proceso Cable Carril");
 			exit(EXIT_FAILURE);
 		}
 		else {
 			SalidaPorPantalla::instancia().mostrar("Lanzado Cable Carril", i);
+		}
+
+		pid = fork();
+
+		if (pid == 0) {
+
+			execl("./compCC", "CompCC", ss.str().c_str(), NULL);
+			SalidaPorPantalla::instancia().error("No se pudo iniciar proceso Cable Carril");
+			exit(EXIT_FAILURE);
+		}
+		else {
+			SalidaPorPantalla::instancia().mostrar("Lanzado Componente de Cable Carril", i);
 		}
 
 	}

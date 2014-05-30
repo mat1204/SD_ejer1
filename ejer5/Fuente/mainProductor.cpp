@@ -10,7 +10,6 @@
 
 void lanzarPersona(const char* numPersona);
 
-
 int main(int argc, char** argv) {
 	SalidaPorPantalla::instancia().etiqueta("Productor");
 	SalidaPorPantalla::instancia().color(FUENTE_AZUL);
@@ -35,7 +34,7 @@ int main(int argc, char** argv) {
 
 			ss.str("");
 			ss << i;
-			SalidaPorPantalla::instancia().mostrar("Por lanzar persona...");
+			//SalidaPorPantalla::instancia().mostrar("Por lanzar persona...");
 			lanzarPersona(ss.str().c_str());
 
 			++i;
@@ -44,6 +43,8 @@ int main(int argc, char** argv) {
 			SalidaPorPantalla::instancia().mostrar("Esperando por lugar");
 			salaPie->esperarPorLugar();
 		}
+
+		usleep(TIEMPO_TRABAJO + 20 * TIEMPO_TRABAJO * FRANDOM);
 	}
 
 	return 0;
@@ -61,7 +62,17 @@ void lanzarPersona(const char* numPersona) {
 		exit(EXIT_FAILURE);
 	}
 	else {
-		SalidaPorPantalla::instancia().mostrar("Persona Lanzada");
+		//SalidaPorPantalla::instancia().mostrar("Persona Lanzada");
 	}
 
+	pid = fork();
+
+	if (pid == 0) {
+		execl("./compPer", "compPersona" , numPersona, NULL);
+		SalidaPorPantalla::instancia().error("No se pudo iniciar proceso componente Persona.");
+		exit(EXIT_FAILURE);
+	}
+	else {
+		//SalidaPorPantalla::instancia().mostrar("Comp Persona Lanzada");
+	}
 }

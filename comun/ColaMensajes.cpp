@@ -19,6 +19,7 @@
 extern int errno;
 
 ColaMensajes::ColaMensajes(const char* ruta, char id, bool crear) {
+	_salida = &SalidaPorPantalla::instancia();
 
 	key_t clave = ftok(ruta, id);
 
@@ -40,8 +41,6 @@ ColaMensajes::ColaMensajes(const char* ruta, char id, bool crear) {
 		_salida->error("Error al crear o obtener la Cola de Mensajes");
 		exit(EXIT_FAILURE);
 	}
-
-	_salida = &SalidaPorPantalla::instancia();
 }
 
 ColaMensajes::~ColaMensajes() {

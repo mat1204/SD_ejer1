@@ -37,13 +37,14 @@ int main(int argc, char** argv) {
 
 	iSalaPersona *salaPie = &sP, *salaCima = &sC;
 
+	sal->mostrar("Llegando para realizar paseo por la Montaña");
+	usleep(FRANDOM * TIEMPO_TRABAJO );
 
 	sal->mostrar("Haciendo cola al Pie de la Montaña");
 	salaPie->hacerCola(numPersona);
 
-
 	// subiendo al cable carril
-	usleep(TIEMPO_TRABAJO / 5);
+	usleep(TIEMPO_TRABAJO + FRANDOM * TIEMPO_TRABAJO );
 
 	sal->mostrar("Subiendo al cable carril para ir a la Cima");
 	salaPie->subirCableCarril();
@@ -51,7 +52,7 @@ int main(int argc, char** argv) {
 
 	sal->mostrar("Realizando paseo...");
 	usleep(tiempoDePaseo());
-
+	sal->mostrar("Paseo Finalizado");
 
 	while (salaCima->hayLugar() == false) {
 		sal->mostrar("Esperando por lugar en la Cima.");
@@ -62,7 +63,7 @@ int main(int argc, char** argv) {
 	salaCima->hacerCola(numPersona);
 
 	// subiendo al cable carril
-	usleep(TIEMPO_TRABAJO / 5);
+	usleep(TIEMPO_TRABAJO / 5 + FRANDOM * TIEMPO_TRABAJO);
 
 	sal->mostrar("Subiendo cable carril para ir al Pie de la montaña.");
 	salaCima->subirCableCarril();
@@ -73,14 +74,13 @@ int main(int argc, char** argv) {
 }
 
 #define LIM_INF		TIEMPO_TRABAJO
-#define LIM_SUP		(3 * TIEMPO_TRABAJO)
+#define LIM_SUP		(10 * TIEMPO_TRABAJO)
+
 
 
 int tiempoDePaseo() {
 
-	float aux = ((float)rand()) / ((float)RAND_MAX);
-
-	int res = LIM_INF + (LIM_SUP - LIM_INF) * aux;
+	int res = LIM_INF + (LIM_SUP - LIM_INF) * FRANDOM;
 
 	return res;
 }
